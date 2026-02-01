@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="astronomicengine.ImageRendering.ImageRenderingTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-01-31T10:38:09.420Z" hostname="manas-ThinkCentre-M70t" time="3.692">
+  <properties/>
+  <testcase name="imageRenderingTest()" classname="astronomicengine.ImageRendering.ImageRenderingTest" time="3.692"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
