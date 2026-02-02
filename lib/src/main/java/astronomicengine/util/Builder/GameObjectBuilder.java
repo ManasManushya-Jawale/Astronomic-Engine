@@ -1,13 +1,20 @@
 package astronomicengine.util.Builder;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.TextComponent;
 
+import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
 import astronomicengine.comp.Component;
+import astronomicengine.comp.std.DrawableComponent;
 import astronomicengine.comp.std.TransformComponent;
+import astronomicengine.graphics.Graphics2DSprite;
 import astronomicengine.shapes.GameObject;
+import astronomicengine.shapes.Shape;
 import astronomicengine.util.Math.AEMath;
 
 public class GameObjectBuilder {
@@ -41,17 +48,28 @@ public class GameObjectBuilder {
         return this;
     }
 
-    public GameObjectBuilder centerTransform(int width, int height) {
-        TransformComponent tc = object.getComponent(TransformComponent.class);
-        Vector3d pos = new Vector3d(), scl = new Vector3d(), rot = new Vector3d();
-        pos = tc.getPosition();
-        scl = tc.getScale();
+    public GameObjectBuilder addDrawable(Shape shape) {
+        addComponent(new DrawableComponent(shape));
+        return this;
+    }
 
-        rot = tc.getRotation();
+    public static interface GraphicsScript {
+        public void applyScript(Graphics2D g2d, Rectangle rect);
+    }
 
-        // Extract Euler angles (in radians)
-        double angleZ = rot.z;
-        tc.setTransform(AEMath.buildCenteredTransform(pos.x, pos.y, width, height, angleZ, scl.x, scl.y));
+    public GameObjectBuilder addGraphics(GraphicsScript script, Dimension size) {
+        Graphics2DSprite g2s = new Graphics2DSprite(size.width, size.height);
+
+        Graphics2D g2d = g2s.getGraphics();
+        try {
+            // Let the script draw into the sprite
+            script.applyScript(g2d, new Rectangle(0, 0, size.width, size.height));
+        } finally {
+            g2d.dispose(); // free native resources
+        }
+
+        g2s.uploadTexture();
+        addDrawable(g2s);
 
         return this;
     }

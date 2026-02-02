@@ -18,13 +18,18 @@ public class Graphics2DSprite extends Shape {
     private BufferedImage image;
     private ImageSprite delegate; // reuse ImageSprite for rendering
 
+    public int width, height;
+
     public Graphics2DSprite(int width, int height) {
         super(Color.WHITE);
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
-        g2d.setBackground(new Color(0, 0, 0, 0)); // transparent background
+        g2d.setBackground(new Color(0, 0, 0, 0));
         g2d.clearRect(0, 0, width, height);
         g2d.dispose();
+
+        this.height = height;
+        this.width = width;
 
         // Initial delegate
         delegate = new ImageSprite(image);

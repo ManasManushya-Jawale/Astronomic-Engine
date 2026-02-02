@@ -25,11 +25,16 @@ public class Polygon2d extends Shape {
     @Override
     public void draw(Matrix4d transform) {
 
+        GameUtils.clearState();
+        GameUtils.applyColor(this.color);
+        GameUtils.applyTransforms(transform);
         glBegin(GL_POLYGON);
         for (int i = 0; i < points.length; i++) {
             glVertex2d(points[i].x, points[i].y);
         }
         glEnd();
+
+        glPopMatrix();
     }
 
 }

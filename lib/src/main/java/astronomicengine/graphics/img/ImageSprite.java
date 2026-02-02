@@ -136,6 +136,7 @@ public class ImageSprite extends Shape {
 
     @Override
     public void draw(Matrix4d transform) {
+        GameUtils.applyColor(color);
         loadTextureIfNeeded();
         if (textureId == 0)
             return;
@@ -145,25 +146,29 @@ public class ImageSprite extends Shape {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindTexture(GL_TEXTURE_2D, textureId);
 
-        // Apply transform
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        transform.get(fb);
+        // Isolate this sprite’s transform
         glMatrixMode(GL_MODELVIEW);
         glPushMatrix();
+
+        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+        transform.get(fb);
         glMultMatrixf(fb);
 
-        // Center the quad around (0,0) so pivot is correct
         float halfW = imgWidth / 2f;
         float halfH = imgHeight / 2f;
 
         glBegin(GL_QUADS);
-        glTexCoord2f(0f, 0f); glVertex2f(-halfW, -halfH);
-        glTexCoord2f(1f, 0f); glVertex2f( halfW, -halfH);
-        glTexCoord2f(1f, 1f); glVertex2f( halfW,  halfH);
-        glTexCoord2f(0f, 1f); glVertex2f(-halfW,  halfH);
+        glTexCoord2f(0f, 0f);
+        glVertex2f(-halfW, -halfH);
+        glTexCoord2f(1f, 0f);
+        glVertex2f(halfW, -halfH);
+        glTexCoord2f(1f, 1f);
+        glVertex2f(halfW, halfH);
+        glTexCoord2f(0f, 1f);
+        glVertex2f(-halfW, halfH);
         glEnd();
 
-        glPopMatrix();
+        glPopMatrix(); // restore previous matrix state
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 

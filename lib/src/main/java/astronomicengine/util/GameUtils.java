@@ -28,11 +28,6 @@ public class GameUtils {
         glMultMatrixf(fb); // multiply instead of replace
     }
 
-    public static void restoreTransforms() {
-        glMatrixMode(GL_MODELVIEW);
-        glPopMatrix();
-    }
-
     // Clear both transformation and color state
     public static void clearState() {
         // Reset transformation
@@ -152,4 +147,5 @@ public class GameUtils {
 
         return null;
     }
+
 }

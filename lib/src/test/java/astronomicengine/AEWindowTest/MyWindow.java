@@ -62,12 +62,13 @@ public class MyWindow extends AEWindow {
 
         Graphics2DSprite g2s = new Graphics2DSprite(100, 100);
         Graphics2D g2d = g2s.getGraphics();
-        g2d.drawRect(0, 0, 20, 100);
+        g2d.fillRect(0, 0, 20, 100);
         g2s.uploadTexture();
 
         button = new GameObjectBuilder()
-        .setTranslate(new Vector3d(100, 100, 0))
-        .addComponent(new DrawableComponent(g2s))
+        .setTranslate(new Vector3d(200, 100, 0))
+        .setRotation(new Vector3d(0, 0, 1))
+        .addDrawable(g2s)
         .build();
         objects.add(button);
     }
@@ -78,7 +79,6 @@ public class MyWindow extends AEWindow {
 
         System.out.println(button.getTransformComponent().getTransform().toString());
     }
-
     public static void main(String[] arg) throws Exception {
         if (!GLFW.glfwInit())
             throw new Exception();

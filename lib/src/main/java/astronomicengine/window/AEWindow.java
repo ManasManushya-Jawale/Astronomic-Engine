@@ -47,6 +47,7 @@ public class AEWindow {
         this.objects = new ArrayList<>();
         this.uiObjects = new ArrayList<>();
 
+
         if (!GLFW.glfwInit())
             return;
         window = GLFW.glfwCreateWindow(size.width, size.height, title, 0, 0);
@@ -87,9 +88,6 @@ public class AEWindow {
 
             DrawableComponent draw;
             if ((draw = object.getComponent(DrawableComponent.class)) != null) {
-                GameUtils.clearState();
-                GameUtils.applyColor(draw.getShape().color);
-                GameUtils.applyTransforms(transform.getTransform());
                 draw.getShape().draw(transform.getTransform());
             }
 
