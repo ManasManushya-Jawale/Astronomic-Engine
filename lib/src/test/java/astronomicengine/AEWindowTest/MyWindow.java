@@ -3,6 +3,7 @@ package astronomicengine.AEWindowTest;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
@@ -30,7 +31,7 @@ public class MyWindow extends AEWindow {
                 .setTranslate(new Vector3d(300, 200, 0))
                 .addComponent(new DrawableComponent(new Polygon2d(
                         Color.RED,
-                        new Vector2d[] {
+                        new Vector2d[]{
                                 new Vector2d(0, 0),
                                 new Vector2d(-50, 100),
                                 new Vector2d(50, 100),
@@ -60,25 +61,34 @@ public class MyWindow extends AEWindow {
 
         objects.add(triangle);
 
-        Graphics2DSprite g2s = new Graphics2DSprite(100, 100);
-        Graphics2D g2d = g2s.getGraphics();
-        g2d.fillRect(0, 0, 20, 100);
-        g2s.uploadTexture();
+        Graphics2DSprite.GraphicsScript script = (g2d, w, h) -> {
+            g2d.setColor(Color.BLUE);
+            g2d.fillRect(0, 0, w, h);
+            return g2d;
+        };
+
+        Graphics2DSprite g2s = new Graphics2DSprite(100, 100, script);
 
         button = new GameObjectBuilder()
-        .setTranslate(new Vector3d(200, 100, 0))
-        .setRotation(new Vector3d(0, 0, 1))
-        .addDrawable(g2s)
-        .build();
+                .setTranslate(new Vector3d(100, 100, 0))
+                .setRotation(new Vector3d(0, 0, 1))
+                .addDrawable(g2s)
+                .addComponent(new Component(){
+                    @Override
+                    public void update(float delta) {
+                        super.update(delta);
+                        parent.transform.getTransform().translate(0,  1, 0);
+                    }
+                })
+                .build();
         objects.add(button);
     }
 
     @Override
     public void loop(double fps) {
         super.loop(fps);
-
-        System.out.println(button.getTransformComponent().getTransform().toString());
     }
+
     public static void main(String[] arg) throws Exception {
         if (!GLFW.glfwInit())
             throw new Exception();

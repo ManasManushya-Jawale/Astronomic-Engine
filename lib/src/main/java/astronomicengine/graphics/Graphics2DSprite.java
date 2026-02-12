@@ -14,6 +14,9 @@ import astronomicengine.shapes.Shape;
  * Uses ImageSprite internally for OG-style rendering.
  */
 public class Graphics2DSprite extends Shape {
+    public static interface GraphicsScript {
+        public Graphics2D apply(Graphics2D g2d, int width, int height);
+    }
 
     private BufferedImage image;
     private ImageSprite delegate; // reuse ImageSprite for rendering
@@ -26,6 +29,22 @@ public class Graphics2DSprite extends Shape {
         Graphics2D g2d = image.createGraphics();
         g2d.setBackground(new Color(0, 0, 0, 0));
         g2d.clearRect(0, 0, width, height);
+        g2d.dispose();
+
+        this.height = height;
+        this.width = width;
+
+        // Initial delegate
+        delegate = new ImageSprite(image);
+    }
+
+    public Graphics2DSprite(int width, int height, GraphicsScript script) {
+        super(Color.WHITE);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        g2d.setBackground(new Color(0, 0, 0, 0));
+        g2d.clearRect(0, 0, width, height);
+        script.apply(g2d, width, height);
         g2d.dispose();
 
         this.height = height;
