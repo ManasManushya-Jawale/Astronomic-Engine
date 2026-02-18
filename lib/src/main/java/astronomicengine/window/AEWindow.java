@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import astronomicengine.gui.GUIObject;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -38,15 +39,15 @@ public class AEWindow {
      **/
     public Vector3D near, far;
 
-    public ArrayList<GameObject> objects, uiObjects;
+    public ArrayList<GameObject> objects;
+    public ArrayList<GUIObject> guiObjects;
 
     public AEWindow(Dimension size, String title) {
         this.size = size;
         this.title = title;
 
         this.objects = new ArrayList<>();
-        this.uiObjects = new ArrayList<>();
-
+        this.guiObjects = new ArrayList<>();
 
         if (!GLFW.glfwInit())
             return;
@@ -84,13 +85,17 @@ public class AEWindow {
                 background.getAlpha() / 255f);
 
         for (GameObject object : objects) {
-            TransformComponent transform = object.getComponent(TransformComponent.class);
-
-            DrawableComponent draw;
-            if ((draw = object.getComponent(DrawableComponent.class)) != null) {
-                draw.getShape().draw(transform.getTransform());
+            TransformComponent transform;
+            if ((transform = object.getComponent(TransformComponent.class)) != null) {
+                DrawableComponent draw;
+                if ((draw = object.getComponent(DrawableComponent.class)) != null) {
+                    draw.getShape().draw(transform.getTransform());
+                }
             }
+        }
 
+        for (GUIObject object : guiObjects) {
+            object.paintComponent();
         }
 
         GLFW.glfwSwapBuffers(window);

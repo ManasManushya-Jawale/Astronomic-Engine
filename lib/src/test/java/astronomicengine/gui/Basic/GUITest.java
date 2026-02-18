@@ -1,14 +1,14 @@
 package astronomicengine.gui.Basic;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import org.joml.Vector3d;
+import java.awt.*;
+
+import astronomicengine.gui.GUIObject;
+import astronomicengine.util.Builder.Shapes;
 import org.lwjgl.glfw.GLFW;
 
 import astronomicengine.shapes.GameObject;
-import astronomicengine.util.Builder.GameObjectBuilder;
-import astronomicengine.util.Builder.GameObjectBuilder.GraphicsScript;
 import astronomicengine.window.AEWindow;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GUITest extends AEWindow {
 
@@ -16,15 +16,24 @@ public class GUITest extends AEWindow {
         super(new Dimension(800, 600), "GUI Test - Simple Shapes");
         setBounds(0, 800, 0, 600, -1, 1);
 
-        GameObject button = new GameObjectBuilder()
-                .setTranslate(new Vector3d(200, 100, 0))
-                .addGraphics((g2d, rect) -> {
-                    g2d.setColor(Color.gray);
-                    g2d.fillRect(0, 0, 20, rect.height);
-                }, new Dimension(100, 100))
-                .build();
+        GUIObject button = new GUIObject(new Rectangle(10, 10, 100, 100)){
+            @Override
+            public void paintComponent() {
+                super.paintComponent();
+                glBegin(GL_TRIANGLES);
+                glColor3f(220 / 255f, 220 / 255f, 220 / 255f);
+                glVertex2f(getBounds().x, getBounds().y);
+                glVertex2f(getBounds().x + getBounds().width, getBounds().y);
+                glVertex2f(
+                        getBounds().x + getBounds().width / 2f,
+                        getBounds().y + getBounds().height);
+                glEnd();
+            }
+        };
 
-        objects.add(button);
+        button.setPosition(100, 20);
+
+        guiObjects.add(button);
 
     }
 

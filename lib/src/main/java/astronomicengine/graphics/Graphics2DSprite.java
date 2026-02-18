@@ -12,6 +12,8 @@ import astronomicengine.shapes.Shape;
 /**
  * A bridge between AWT Graphics2D drawing and LWJGL rendering.
  * Uses ImageSprite internally for OG-style rendering.
+ *
+ * I added this feature for fun.
  */
 public class Graphics2DSprite extends Shape {
     public static interface GraphicsScript {

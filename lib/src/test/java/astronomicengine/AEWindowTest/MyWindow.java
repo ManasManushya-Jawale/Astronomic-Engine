@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
+import astronomicengine.util.RenderingUtils;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;

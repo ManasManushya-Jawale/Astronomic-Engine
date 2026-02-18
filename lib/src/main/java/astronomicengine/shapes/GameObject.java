@@ -53,4 +53,8 @@ public class GameObject {
         components.add(comp);
         return comp;
     }
+
+    public void initComponentList() {
+        this.components = new ArrayList<>();
+    }
 }
