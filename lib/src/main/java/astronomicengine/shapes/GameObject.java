@@ -20,7 +20,7 @@ public class GameObject {
         return components;
     }
 
-    @SuppressWarnings("unchecked")
+     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponent(Class<T> componentClass) {
         for (Component c : components) {
             if (componentClass.isAssignableFrom(c.getClass())) {

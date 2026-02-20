@@ -17,6 +17,9 @@ import java.util.ArrayList;
 
 import astronomicengine.gui.GUIObject;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.joml.Matrix4d;
+import org.joml.Matrix4dc;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
@@ -25,6 +28,7 @@ import astronomicengine.comp.std.DrawableComponent;
 import astronomicengine.comp.std.TransformComponent;
 import astronomicengine.shapes.GameObject;
 import astronomicengine.util.GameUtils;
+import org.lwjgl.opengl.GL11;
 
 public class AEWindow {
     public long window;
@@ -42,6 +46,11 @@ public class AEWindow {
     public ArrayList<GameObject> objects;
     public ArrayList<GUIObject> guiObjects;
 
+    public boolean runInBackground = false;
+    private boolean visible = true;
+
+    private Matrix4d projectionMatrix;
+
     public AEWindow(Dimension size, String title) {
         this.size = size;
         this.title = title;
@@ -58,12 +67,21 @@ public class AEWindow {
             glViewport(0, 0, width, height);
         });
 
+        projectionMatrix = new Matrix4d();
+
     }
 
     public void setBounds(double l, double r, double t, double b, double n, double f) {
         near = new Vector3D(l, t, n);
         far = new Vector3D(r, b, f);
+    }
 
+    public Matrix4d getProjectionMatrix() {
+        return projectionMatrix;
+    }
+
+    public void setProjectionMatrix(Matrix4d projectionMatrix) {
+        this.projectionMatrix = projectionMatrix;
     }
 
     public void setBounds(Vector3D near, Vector3D far) {
@@ -89,7 +107,9 @@ public class AEWindow {
             if ((transform = object.getComponent(TransformComponent.class)) != null) {
                 DrawableComponent draw;
                 if ((draw = object.getComponent(DrawableComponent.class)) != null) {
-                    draw.getShape().draw(transform.getTransform());
+                    Matrix4d mvp = new Matrix4d(projectionMatrix)
+                            .mul(transform.getTransform());
+                    draw.getShape().draw(mvp);
                 }
             }
         }
@@ -110,8 +130,13 @@ public class AEWindow {
         }
     }
 
-    public void startDisplaying() {
+    public void initialStart() {
+        if (runInBackground^visible) {
+            startDisplaying();
+        }
+    }
 
+    private void startDisplaying() {
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
@@ -136,6 +161,21 @@ public class AEWindow {
 
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
+    }
+
+    public void hideWindow() {
+        GLFW.glfwHideWindow(window);
+        visible = false;
+    }
+
+    public void showWindow() {
+        GLFW.glfwShowWindow(window);
+        visible = true;
+    }
+
+    public void destroyWindow() {
+        GLFW.glfwDestroyWindow(window);
+        GLFW.glfwSetErrorCallback(null).free();
     }
 
     public boolean keyPressed(int key) {

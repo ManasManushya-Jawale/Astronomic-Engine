@@ -78,6 +78,6 @@ public class ImageRenderingTestWindow extends AEWindow {
     }
 
     public static void main(String[] args) {
-        new ImageRenderingTestWindow().startDisplaying();
+        new ImageRenderingTestWindow().initialStart();
     }
 }

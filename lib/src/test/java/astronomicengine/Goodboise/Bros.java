@@ -47,6 +47,6 @@ public class Bros extends AEWindow {
     }
 
     public static void main(String[] args) {
-        new Bros().startDisplaying();
+        new Bros().initialStart();
     }
 }

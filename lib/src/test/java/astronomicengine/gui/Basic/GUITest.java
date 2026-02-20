@@ -47,6 +47,6 @@ public class GUITest extends AEWindow {
     public static void main(String[] args) throws Exception {
         if (!GLFW.glfwInit())
             throw new Exception();
-        new GUITest().startDisplaying();
+        new GUITest().initialStart();
     }
 }

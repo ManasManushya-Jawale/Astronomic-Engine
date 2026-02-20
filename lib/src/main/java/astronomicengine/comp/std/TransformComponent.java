@@ -9,7 +9,7 @@ public class TransformComponent extends Component {
     private Vector3d rotation; // radians (x,y,z)
     private Vector3d scale;
     private Vector3d pivot; // local pivot point
-    private Matrix4d transform;
+    public Matrix4d transform;
 
     public TransformComponent() {
         position = new Vector3d(0, 0, 0);

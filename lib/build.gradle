@@ -46,7 +46,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-openal:3.3.3:natives-macos"
 
     implementation 'org.joml:joml:1.10.8'
-
+    implementation 'org.jdom:jdom2:2.0.6.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
