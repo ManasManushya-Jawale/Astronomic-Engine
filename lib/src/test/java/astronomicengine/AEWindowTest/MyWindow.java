@@ -39,7 +39,7 @@ public class MyWindow extends AEWindow {
             g2d.setColor(Color.BLUE);
             g2d.fillRoundRect(0, 0, w, h, 20, 20);
             g2d.setColor(Color.WHITE);
-            g2d.setFont(new Font("JetBrains Mono", Font.PLAIN, 24));
+            g2d.setFont(new Font("JetBrains Mono NF", Font.PLAIN, 24));
             g2d.drawString("Helo", 20, 30);
             return g2d;
         };
