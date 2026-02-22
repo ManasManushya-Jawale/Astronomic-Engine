@@ -1,6 +1,6 @@
 # Astronomic-Engine
 <p>
-Astronomic engine is a game engine made by Manas Manushya that is made in order to make game making easier than before. This game framework is available for java, which makes it better as java is one of the simplest languages while keeping its reaches balanced.
+Astronomic engine (or Astro-Engine) is a game engine made by Manas Manushya that is made in order to make game making easier than before. This game framework is available for java, which makes it better as java is one of the simplest languages while keeping its reaches balanced.
 </p>
 
 This library currently includes:
