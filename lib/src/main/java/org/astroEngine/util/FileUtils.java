@@ -11,15 +11,12 @@ public class FileUtils {
         Class<?> caller = WALKER.walk(frames -> frames.skip(1).findFirst().get().getDeclaringClass());
         URL url = caller.getResource(resourcePath);
         if (url == null) {
-            throw new IllegalArgumentException("Resource not found");
+            throw new IllegalArgumentException("Resource not found: " + resourcePath);
         }
-        String path = "";
         try {
-            path = new File(url.toURI()).getAbsolutePath();
+            return new File(url.toURI()).getAbsoluteFile();
         } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new IllegalStateException("Invalid resource URI: " + resourcePath, e);
         }
-        return new File(path);
     }
 }
