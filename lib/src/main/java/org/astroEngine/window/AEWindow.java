@@ -14,9 +14,11 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.astroEngine.gui.GUIObject;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.astroEngine.util.GameUtils;
 import org.joml.Matrix4d;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -32,12 +34,6 @@ public class AEWindow {
     public String title;
 
     public Color background = Color.GREEN;
-
-    /**
-     * Near - (x, y, z) -> (left, top, near)
-     * Far - (x, y, z) -> (right, bottom, far)
-     **/
-    public Vector3D near, far;
 
     public ArrayList<GameObject> objects;
     public ArrayList<GUIObject> guiObjects;
@@ -56,20 +52,16 @@ public class AEWindow {
 
         if (!GLFW.glfwInit())
             return;
+
+        preWindowInitialization();
         window = GLFW.glfwCreateWindow(size.width, size.height, title, 0, 0);
 
         GLFW.glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
-            setBounds(0, width, 0, width, near.getZ(), far.getZ());
             glViewport(0, 0, width, height);
         });
 
         projectionMatrix = new Matrix4d();
 
-    }
-
-    public void setBounds(double l, double r, double t, double b, double n, double f) {
-        near = new Vector3D(l, t, n);
-        far = new Vector3D(r, b, f);
     }
 
     public Matrix4d getProjectionMatrix() {
@@ -78,12 +70,6 @@ public class AEWindow {
 
     public void setProjectionMatrix(Matrix4d projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
-    }
-
-    public void setBounds(Vector3D near, Vector3D far) {
-        this.near = near;
-        this.far = far;
-
     }
 
     public void setBackground(Color color) {
@@ -132,14 +118,13 @@ public class AEWindow {
         }
     }
 
+    public void preWindowInitialization() { }
+    public void loopSetup() { }
+
     private void startDisplaying() {
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(near.getX(), far.getX(), far.getY(), near.getY(), near.getZ(), far.getZ());
-        glMatrixMode(GL_MODELVIEW);
+        loopSetup();
 
         long lastFrameTime = System.nanoTime();
         double fps;
@@ -176,5 +161,29 @@ public class AEWindow {
 
     public boolean keyPressed(int key) {
         return GLFW.glfwGetKey(window, key) == GLFW.GLFW_PRESS;
+    }
+    public boolean keyRelease(int key) { return GLFW.glfwGetKey(window, key) == GLFW.GLFW_RELEASE; }
+    public boolean keyRepeat(int key) { return GLFW.glfwGetKey(window, key) == GLFW.GLFW_REPEAT; }
+
+    public void addObject(GameObject object) {
+        object.setParent(this);
+        objects.add(object);
+    }
+
+    public void removeObject(GameObject object) {
+        object.setParent(null);
+        objects.remove(object);
+    }
+
+    public void removeGUIObject(GUIObject guiObject) {
+        guiObjects.remove(guiObject);
+    }
+
+    public void addGUIObject(GUIObject guiObject) {
+        guiObjects.add(guiObject);
+    }
+
+    public void applyTransformations(Matrix4d model) {
+        GameUtils.applyTransforms(new Matrix4d(projectionMatrix).mul(model));
     }
 }

@@ -3,11 +3,14 @@ package org.astroEngine.shapes;
 import java.util.ArrayList;
 
 import org.astroEngine.comp.Component;
+import org.astroEngine.comp.std.DrawableComponent;
 import org.astroEngine.comp.std.TransformComponent;
+import org.astroEngine.window.AEWindow;
 
 public class GameObject {
     ArrayList<Component> components;
     public TransformComponent transform;
+    private AEWindow parent;
 
     public GameObject() {
         this.components = new ArrayList<>();
@@ -54,5 +57,17 @@ public class GameObject {
 
     public void initComponentList() {
         this.components = new ArrayList<>();
+    }
+
+    public AEWindow getParent() {
+        return parent;
+    }
+    
+    public DrawableComponent addDrawable(Shape shape) {
+        return ((DrawableComponent) addComponent(new DrawableComponent(shape)));
+    }
+
+    public void setParent(AEWindow parent) {
+        this.parent = parent;
     }
 }

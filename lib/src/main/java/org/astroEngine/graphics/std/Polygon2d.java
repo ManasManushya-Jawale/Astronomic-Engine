@@ -28,8 +28,8 @@ public class Polygon2d extends Shape {
         GameUtils.applyColor(this.color);
         GameUtils.applyTransforms(transform);
         glBegin(GL_POLYGON);
-        for (int i = 0; i < points.length; i++) {
-            glVertex2d(points[i].x, points[i].y);
+        for (Vector2d point : points) {
+            glVertex2d(point.x, point.y);
         }
         glEnd();
 

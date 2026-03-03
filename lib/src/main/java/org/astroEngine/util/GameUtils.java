@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -19,13 +20,14 @@ import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
 
 public class GameUtils {
-    public static void applyTransforms(Matrix4d transform) {
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        transform.get(fb);
+    public static void applyTransforms(Matrix4d mvp) {
+        DoubleBuffer db = BufferUtils.createDoubleBuffer(16);
+        mvp.get(db);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();          // projection stays identity
 
         glMatrixMode(GL_MODELVIEW);
-        glPushMatrix();
-        glMultMatrixf(fb); // multiply instead of replace
+        glLoadMatrixd(db);         // load FULL MVP here
     }
 
     // Clear both transformation and color state

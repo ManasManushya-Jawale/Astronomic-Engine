@@ -7,6 +7,7 @@ public class Component {
 
     public Component(GameObject parent) {
         this.parent = parent;
+        
     }
 
     public Component() { }
