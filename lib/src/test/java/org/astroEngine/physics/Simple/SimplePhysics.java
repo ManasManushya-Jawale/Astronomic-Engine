@@ -81,7 +81,7 @@ public class SimplePhysics extends AEWindow {
 
         vertexes = new ArrayList<>();
 
-        addObject(new PhysicsWorldObject(new Vector3d(0, 0, 0)));
+        addObject(new PhysicsWorldObject(new Vector3d(0, 10, 0)));
 
         addObject(new GameObject(){{
             getTransformComponent().getTransform().translate(new Vector3d(200,200,0));

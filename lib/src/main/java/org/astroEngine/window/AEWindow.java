@@ -28,6 +28,9 @@ import org.astroEngine.comp.std.DrawableComponent;
 import org.astroEngine.comp.std.TransformComponent;
 import org.astroEngine.shapes.GameObject;
 
+/**
+ * AEWindow is a window
+ */
 public class AEWindow {
     public long window;
     public Dimension size;
@@ -77,7 +80,7 @@ public class AEWindow {
     }
 
     public void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(
                 background.getRed() / 255f,
                 background.getGreen() / 255f,

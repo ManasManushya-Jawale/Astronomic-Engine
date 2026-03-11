@@ -1,9 +1,14 @@
 package org.astroEngine.util;
 
+import java.nio.Buffer;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderUtils {
+
+    public static record VertexInfo(int VAO, int len){}
+
     public static int createShaderProgram(String vertexSource, String fragmentSource) {
         int vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, vertexSource);

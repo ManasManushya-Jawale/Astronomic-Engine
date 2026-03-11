@@ -1,9 +1,14 @@
 package org.astroEngine.AEWindowTest;
 
 import java.awt.*;
+import java.nio.file.Files;
+import java.util.Arrays;
 
 import org.astroEngine.Primitives.Objects.Camera.OrthographicCamera;
+import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Primitives.Objects.ImageObject;
+import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.graphics.ShaderSprite;
 import org.astroEngine.util.FileUtils;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
@@ -14,13 +19,20 @@ import org.astroEngine.graphics.Graphics2DSprite;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.window.AEWindow;
 
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.glDisable;
+
 public class MyWindow extends AEWindow {
 
-    public GameObject triangle;
+    private final DrawableObject shaderObj;
+    public GameObject car;
     public GameObject button;
     public OrthographicCamera camera;
     public float speed = 3/2f;
     public float steer = 1;
+
+    public float v = 0;
 
     public MyWindow() {
         super(new Dimension(800, 600), "My Custom Window");
@@ -28,12 +40,32 @@ public class MyWindow extends AEWindow {
         camera = new OrthographicCamera(this, 0, 800, 600, 0, -1, 1);
         addObject(camera);
 
-        triangle = new GameObjectBuilder(new ImageObject(FileUtils.internal("/cars/HayaBabu.png"), true))
-                .setTranslate(new Vector3d(400, 300, 0))
-                .setScale(new Vector3d(6))
+        shaderObj = (DrawableObject) new GameObjectBuilder(new DrawableObject(new ShaderSprite(
+                FileUtils.readFile(FileUtils.internal("/shaders/pulsing/Vertex.glsl")),
+                FileUtils.readFile(FileUtils.internal("/shaders/pulsing/Frag.glsl")),
+                Arrays.asList(
+                        -50f, -50f, 0f,
+                        50f, -50f, 0f,
+                        50f, 50f, 0f,
+                        -50f, 50f, 0f
+                )
+        ){{
+            setShaderProgramListener(shaderProgram -> {
+                glUniform1f(glGetUniformLocation(shaderProgram, "time"), v);
+                glUniform1f(glGetUniformLocation(shaderProgram, "u_scale"), 10);
+                return shaderProgram;
+            });
+        }}))
+                .setTranslate(new Vector3d(0, 0, 0)) //translation
                 .build();
+        addObject(shaderObj);
 
-        addObject(triangle);
+        car = new GameObjectBuilder(new ImageObject(FileUtils.internal("/cars/HayaBabu.png"), true))
+                .setTranslate(new Vector3d(400, 300, 0)) //translation
+                .setScale(new Vector3d(6)) // scaling factor
+                .build(); // finalizes the builder to give the Game Object
+
+        addObject(car); // adds the object into the object list
 
         Graphics2DSprite.GraphicsScript script = (g2d, w, h) -> {
             g2d.setColor(Color.BLUE);
@@ -50,7 +82,8 @@ public class MyWindow extends AEWindow {
                 .setRotation(new Vector3d(0, 0, 1))
                 .addDrawable(g2s)
                 .build();
-        addObject(button);
+//        addObject(button);
+
 
     }
 
@@ -58,32 +91,39 @@ public class MyWindow extends AEWindow {
     public void loop(double fps) {
         super.loop(fps);
 
-        System.out.println("Sda");
-        Vector3d oldPos = triangle.getTransformComponent().getPosition();
-        Vector3d oldRot = triangle.getTransformComponent().getRotation();
+        Vector3d oldPos = car.getTransformComponent().getPosition();
+        Vector3d oldRot = car.getTransformComponent().getRotation();
 
         if (keyPressed(GLFW.GLFW_KEY_W)) {
-            triangle.transform.translateRelative(new Vector3d(0, -speed, 0));
+            car.transform.translateRelative(new Vector3d(0, -speed, 0));
         }
         if (keyPressed(GLFW.GLFW_KEY_A)) {
-            triangle.getTransformComponent().rotateZ((float) (-steer / fps));
+            car.getTransformComponent().rotateZ((float) (-steer / fps));
         }
         if (keyPressed(GLFW.GLFW_KEY_S)) {
-            triangle.getTransformComponent().translateRelative(new Vector3d(0, speed, 0));
+            car.getTransformComponent().translateRelative(new Vector3d(0, speed, 0));
         }
         if (keyPressed(GLFW.GLFW_KEY_D)) {
-            triangle.getTransformComponent().rotateZ((float) (steer / fps));
+            car.getTransformComponent().rotateZ((float) (steer / fps));
         }
 
-        Vector3d newPos = triangle.getTransformComponent().getPosition();
-        Vector3d newRot = triangle.getTransformComponent().getRotation();
+        Vector3d newPos = car.getTransformComponent().getPosition();
+        Vector3d newRot = car.getTransformComponent().getRotation();
 
-        Vector3d d = oldPos.sub(newPos);
+        Vector3d d = oldPos.sub(newPos, new Vector3d());
+        Vector3d dR = oldRot.sub(newRot, new Vector3d());
         camera.getProjection().translate(d);
 
-        Vector3d dR = oldRot.sub(newRot);
-
         camera.getProjection().rotateAround(new Quaterniond().rotateZ(dR.z), newPos.x, newPos.y, newPos.z);
+
+        v+= (float) (1f/fps);
+    }
+
+    @Override
+    public void loopSetup() {
+        super.loopSetup();
+        glDisable(GL_DEPTH_TEST);
+        ((ShaderSprite) shaderObj.getComponent(DrawableComponent.class).getShape()).compile();
     }
 
     public static void main(String[] arg) throws Exception {

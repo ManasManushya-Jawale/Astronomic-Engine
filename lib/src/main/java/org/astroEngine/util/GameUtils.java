@@ -2,6 +2,7 @@ package org.astroEngine.util;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -18,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 public class GameUtils {
     public static void applyTransforms(Matrix4d mvp) {
@@ -28,6 +30,8 @@ public class GameUtils {
 
         glMatrixMode(GL_MODELVIEW);
         glLoadMatrixd(db);         // load FULL MVP here
+
+
     }
 
     // Clear both transformation and color state
@@ -38,6 +42,7 @@ public class GameUtils {
 
         // Reset color to white (fully opaque)
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
     }
 
     // Apply a simple RGB color
