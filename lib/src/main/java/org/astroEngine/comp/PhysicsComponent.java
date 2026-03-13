@@ -1,7 +1,5 @@
-package org.astroEngine.comp.phy;
+package org.astroEngine.comp;
 
-import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.TransformComponent;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.util.annot.RequiresComponent;
 import org.joml.Vector3d;

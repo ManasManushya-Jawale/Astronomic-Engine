@@ -1,14 +1,13 @@
 package org.astroEngine.physics.Simple;
 
-import org.astroEngine.Primitives.Objects.phy.PhysicsWorldObject;
+import org.astroEngine.Primitives.Objects.PhysicsWorldObject;
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.phy.PhysicsComponent;
-import org.astroEngine.comp.phy.World;
-import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.comp.PhysicsComponent;
+import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.shapes.Shape;
+import org.astroEngine.graphics.Shape;
 import org.astroEngine.util.GameUtils;
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.AEWindow;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;

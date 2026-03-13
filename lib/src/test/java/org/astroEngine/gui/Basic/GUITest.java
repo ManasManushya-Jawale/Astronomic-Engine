@@ -5,7 +5,7 @@ import java.awt.*;
 import org.astroEngine.gui.GUIObject;
 import org.lwjgl.glfw.GLFW;
 
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.AEWindow;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GUITest extends AEWindow {

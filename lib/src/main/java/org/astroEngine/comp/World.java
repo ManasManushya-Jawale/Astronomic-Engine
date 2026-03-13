@@ -1,4 +1,4 @@
-package org.astroEngine.comp.phy;
+package org.astroEngine.comp;
 
 import org.joml.Vector3d;
 

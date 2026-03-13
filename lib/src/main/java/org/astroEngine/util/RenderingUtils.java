@@ -1,6 +1,6 @@
 package org.astroEngine.util;
 
-import org.astroEngine.shapes.Shape;
+import org.astroEngine.graphics.Shape;
 import org.joml.Math;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;

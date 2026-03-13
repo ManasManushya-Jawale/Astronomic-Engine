@@ -1,4 +1,4 @@
-package org.astroEngine.shapes;
+package org.astroEngine.graphics;
 
 import org.joml.Matrix4d;
 

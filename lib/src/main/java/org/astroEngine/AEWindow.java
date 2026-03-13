@@ -1,31 +1,24 @@
-package org.astroEngine.window;
+package org.astroEngine;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Objects;
 
+import org.astroEngine.events.ResizeListener;
 import org.astroEngine.gui.GUIObject;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.astroEngine.util.GameUtils;
 import org.joml.Matrix4d;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.DrawableComponent;
-import org.astroEngine.comp.std.TransformComponent;
+import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.comp.TransformComponent;
 import org.astroEngine.shapes.GameObject;
 
 /**
@@ -45,6 +38,7 @@ public class AEWindow {
     private boolean visible = true;
 
     private Matrix4d projectionMatrix;
+    private ArrayList<ResizeListener> resizeListeners;
 
     public AEWindow(Dimension size, String title) {
         this.size = size;
@@ -52,6 +46,11 @@ public class AEWindow {
 
         this.objects = new ArrayList<>();
         this.guiObjects = new ArrayList<>();
+        resizeListeners = new ArrayList<>();
+
+        resizeListeners.add((window, w, h) -> {
+            glViewport(0, 0, w, h);
+        });
 
         if (!GLFW.glfwInit())
             return;
@@ -60,7 +59,7 @@ public class AEWindow {
         window = GLFW.glfwCreateWindow(size.width, size.height, title, 0, 0);
 
         GLFW.glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
-            glViewport(0, 0, width, height);
+            resizeListeners.forEach(resizeListener -> resizeListener.resize(win, width, height));
         });
 
         projectionMatrix = new Matrix4d();

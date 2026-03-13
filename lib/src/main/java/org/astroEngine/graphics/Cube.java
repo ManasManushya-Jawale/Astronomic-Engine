@@ -1,6 +1,5 @@
-package org.astroEngine.graphics.Models;
+package org.astroEngine.graphics;
 
-import org.astroEngine.shapes.Shape;
 import org.joml.Matrix4d;
 
 import java.awt.*;

@@ -1,7 +1,7 @@
 package org.astroEngine.Primitives.Objects;
 
-import org.astroEngine.comp.std.DrawableComponent;
-import org.astroEngine.graphics.img.ImageSprite;
+import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.shapes.GameObject;
 
 import java.io.File;

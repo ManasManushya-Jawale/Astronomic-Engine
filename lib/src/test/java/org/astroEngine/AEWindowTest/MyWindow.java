@@ -1,13 +1,12 @@
 package org.astroEngine.AEWindowTest;
 
 import java.awt.*;
-import java.nio.file.Files;
 import java.util.Arrays;
 
-import org.astroEngine.Primitives.Objects.Camera.OrthographicCamera;
+import org.astroEngine.Camera.OrthographicCamera;
 import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Primitives.Objects.ImageObject;
-import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.graphics.ShaderSprite;
 import org.astroEngine.util.FileUtils;
 import org.joml.Quaterniond;
@@ -17,7 +16,7 @@ import org.lwjgl.glfw.GLFW;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.Graphics2DSprite;
 import org.astroEngine.util.Builder.GameObjectBuilder;
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.AEWindow;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;

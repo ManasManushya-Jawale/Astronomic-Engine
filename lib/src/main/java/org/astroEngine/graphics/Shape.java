@@ -1,4 +1,4 @@
-package org.astroEngine.shapes;
+package org.astroEngine.graphics;
 
 import java.awt.Color;
 

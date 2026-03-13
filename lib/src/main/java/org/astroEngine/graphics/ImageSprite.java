@@ -1,4 +1,4 @@
-package org.astroEngine.graphics.img;
+package org.astroEngine.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -15,7 +15,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import org.astroEngine.shapes.Shape;
 import org.astroEngine.util.GameUtils;
 import org.astroEngine.util.Builder.Shapes;
 

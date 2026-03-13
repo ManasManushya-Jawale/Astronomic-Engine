@@ -8,13 +8,13 @@ import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.graphics.img.ImageSprite;
-import org.astroEngine.graphics.std.Polygon2d;
+import org.astroEngine.graphics.ImageSprite;
+import org.astroEngine.graphics.Polygon2d;
 import org.astroEngine.util.FileUtils;
 import org.astroEngine.util.Builder.GameObjectBuilder;
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.AEWindow;
 
 public class ImageRenderingTestWindow extends AEWindow {
     public GameObject imageObject, triangle;

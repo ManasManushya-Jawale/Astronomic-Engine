@@ -1,12 +1,10 @@
-package org.astroEngine.comp.anim;
+package org.astroEngine.comp;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.DrawableComponent;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.graphics.img.ImageSprite;
+import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.util.annot.RequiresComponent;
 
 @RequiresComponent(DrawableComponent.class)

@@ -1,13 +1,13 @@
 package org.astroEngine.Goodboise;
 
-import org.astroEngine.comp.anim.AnimationComponent;
-import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.comp.AnimationComponent;
+import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.graphics.img.ImageSprite;
+import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.util.FileUtils;
 import org.astroEngine.util.GameUtils;
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.AEWindow;
 import org.joml.Vector3d;
 import java.awt.*;
 import java.io.IOException;

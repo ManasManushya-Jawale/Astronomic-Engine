@@ -7,11 +7,11 @@ import java.awt.Rectangle;
 import org.joml.Vector3d;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.DrawableComponent;
-import org.astroEngine.comp.std.TransformComponent;
+import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.comp.TransformComponent;
 import org.astroEngine.graphics.Graphics2DSprite;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.shapes.Shape;
+import org.astroEngine.graphics.Shape;
 
 public class GameObjectBuilder {
     private GameObject object;

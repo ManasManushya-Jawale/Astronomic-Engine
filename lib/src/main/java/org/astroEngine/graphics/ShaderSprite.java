@@ -1,34 +1,22 @@
 package org.astroEngine.graphics;
 
 import org.astroEngine.events.ShaderProgramListener;
-import org.astroEngine.shapes.Shape;
-import org.astroEngine.util.GameUtils;
-import org.astroEngine.util.ShaderUtils;
 import org.joml.Matrix4d;
-import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.Buffer;
-import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glDeleteShader;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL40.glUniformMatrix4dv;
@@ -101,7 +89,7 @@ public class ShaderSprite extends Shape {
         glUseProgram(shaderProgram);
         applyShaderProgramListener(shaderProgramListener);
         glUniformMatrix4fv(transformLoc, false, buffer);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, len);
+        glDrawArrays(SHAPE_TYPE, 0, len);
 
         // Reset shaders to 0 (default)
         glUseProgram(0);

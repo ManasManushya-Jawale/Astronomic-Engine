@@ -1,8 +1,7 @@
-package org.astroEngine.comp.std;
+package org.astroEngine.comp;
 
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
-import org.astroEngine.comp.Component;
 
 public class TransformComponent extends Component {
     private Vector3d position;

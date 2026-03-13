@@ -1,8 +1,7 @@
-package org.astroEngine.comp.std;
+package org.astroEngine.comp;
 
-import org.astroEngine.comp.Component;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.shapes.Shape;
+import org.astroEngine.graphics.Shape;
 
 public class DrawableComponent extends Component {
     Shape shape;

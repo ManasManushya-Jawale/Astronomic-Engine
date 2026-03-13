@@ -1,8 +1,8 @@
 package org.astroEngine.Primitives.Objects;
 
-import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.shapes.Shape;
+import org.astroEngine.graphics.Shape;
 
 public class DrawableObject extends GameObject {
     private DrawableComponent draw;

@@ -1,10 +1,9 @@
-package org.astroEngine.Primitives.Objects.Camera;
+package org.astroEngine.Camera;
 
 import org.astroEngine.comp.Component;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.AEWindow;
 import org.joml.Matrix4d;
-import org.joml.Matrix4f;
 import org.joml.Vector3d;
 
 public class OrthographicCamera extends GameObject {

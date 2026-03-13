@@ -6,9 +6,6 @@ import java.awt.image.BufferedImage;
 
 import org.joml.Matrix4d;
 
-import org.astroEngine.graphics.img.ImageSprite;
-import org.astroEngine.shapes.Shape;
-
 /**
  * A bridge between AWT Graphics2D drawing and LWJGL rendering.
  * Uses ImageSprite internally for OG-style rendering.

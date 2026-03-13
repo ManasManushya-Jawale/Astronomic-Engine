@@ -1,11 +1,10 @@
-package org.astroEngine.graphics.std;
+package org.astroEngine.graphics;
 
 import org.joml.Matrix4d;
 import org.joml.Vector2d;
 
-import org.astroEngine.shapes.Shape;
 import org.astroEngine.util.GameUtils;
-import org.astroEngine.util.Math.AEMath;
+import org.astroEngine.util.AEMath;
 
 import static org.lwjgl.opengl.GL11.*;
 

@@ -1,65 +1,44 @@
 package org.astroEngine.HigherDimensional;
 
-import org.apache.commons.math3.complex.Quaternion;
+import org.astroEngine.Camera.PerspectiveCamera;
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.DrawableComponent;
+import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.graphics.ShaderSprite;
+import org.astroEngine.graphics.Shape;
 import org.astroEngine.shapes.GameObject;
-import org.astroEngine.shapes.Shape;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.util.FileUtils;
+import org.astroEngine.AEWindow;
 import org.astroEngine.util.GameUtils;
-import org.astroEngine.window.AEWindow;
 import org.joml.Matrix4d;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
-import org.jspecify.annotations.NonNull;
 
 import static java.awt.Color.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class HigherDimensionalTest extends AEWindow {
 
-    private final float[] A = {-1, -1, -1};
-    private final float[] B = {-1, -1, 1};
-    private final float[] C = {-1, 1, -1};
-    private final float[] D = {-1, 1, 1};
-    private final float[] E = {1, -1, -1};
-    private final float[] F = {1, -1, 1};
-    private final float[] G = {1, 1, -1};
-    private final float[] H = {1, 1, 1};
-    private final GameObject cube;
+    private final GameObject myObject;
 
-    private Vector3d cameraPosition = new Vector3d(0, 0, -5);
-    private Quaterniond cameraRotation = new Quaterniond();
+    private PerspectiveCamera camera;
 
     public HigherDimensionalTest() {
         super(new Dimension(800, 600), "Higher Dimensional");
 
         setBackground(BLACK);
 
-        // ---------- Projection (lens only) ----------
-        getProjectionMatrix().identity().perspective(
-                (float) Math.toRadians(45),
-                800f / 600f,
-                0.1f,
-                100.0f
-        );
-        getProjectionMatrix().translate(0, 0, -5);
+        camera = new PerspectiveCamera((float) Math.toRadians(45), 800/600f, 0.1f, 100);
+        camera.position.add(0, 0, -5);
 
-        cameraRotation = new Quaterniond();
+        ArrayList<Float> points = generateSphere(1, 20, 20);
 
-        ArrayList<Float> points = getCubeVertices();
-
-        // ---------- Cube ----------
-        cube = new GameObjectBuilder()
+        // ---------- myObject ----------
+        myObject = new GameObjectBuilder()
                 .addDrawable(new ShaderSprite(
                         GL_TRIANGLES,
                         points,
@@ -68,80 +47,63 @@ public class HigherDimensionalTest extends AEWindow {
                 ))
                 .build();
 
-        addObject(cube);
-
-        // ---------- Camera ----------
-        objects.add(new GameObjectBuilder()
-                .addComponent(new Component() {
-                    @Override
-                    public void update(float delta) {
-                        float speed = 2f;
-                        cameraPosition = new Vector3d();
-                        cameraRotation = new Quaterniond();
-
-                        if (keyPressed(GLFW_KEY_W))
-                            cameraPosition.z += speed * delta;
-
-                        if (keyPressed(GLFW_KEY_S))
-                            cameraPosition.z -= speed * delta;
-
-                        if (keyPressed(GLFW_KEY_A))
-                            cameraRotation.rotateY(-speed * delta);
-
-                        if (keyPressed(GLFW_KEY_D))
-                            cameraRotation.rotateY(speed * delta);
-                    }
-                })
-                .build());
-
+        addObject(myObject);
     }
 
-    private @NonNull ArrayList<Float> getCubeVertices() {
+    public static ArrayList<Float> generateSphere(float radius, int stacks, int sectors) {
         ArrayList<Float> verts = new ArrayList<>();
 
-        float[][] vertices = {A, B, C, D, E, F, G, H};
+        verts.add(0f);
+        verts.add(-10f);
+        verts.add(0f);
+        verts.add(0f);
+        verts.add(10f);
+        verts.add(0f);
+        verts.add(.1f);
+        verts.add(-10f);
+        verts.add(0f);
 
-        // Each face: two triangles (triangle list)
-        int[][] faces = {
-                {0, 2, 6, 4},
-                {6, 4, 5, 7},
-                {5, 2, 3, 7},
-                {7, 3, 1, 5},
-                {0, 2, 3, 1},
-                {0, 4, 5, 1}
-        };
+        for (int i = 0; i < stacks; i++) {
 
-        for (int[] f : faces) {
-            // Triangle 1
-            verts.add(vertices[f[0]][0]); verts.add(vertices[f[0]][1]); verts.add(vertices[f[0]][2]);
-            verts.add(vertices[f[1]][0]); verts.add(vertices[f[1]][1]); verts.add(vertices[f[1]][2]);
-            verts.add(vertices[f[2]][0]); verts.add(vertices[f[2]][1]); verts.add(vertices[f[2]][2]);
+            double stackAngle1 = Math.PI / 2 - i * Math.PI / stacks;
+            double stackAngle2 = Math.PI / 2 - (i + 1) * Math.PI / stacks;
 
-            // Triangle 2
-            verts.add(vertices[f[0]][0]); verts.add(vertices[f[0]][1]); verts.add(vertices[f[0]][2]);
-            verts.add(vertices[f[2]][0]); verts.add(vertices[f[2]][1]); verts.add(vertices[f[2]][2]);
-            verts.add(vertices[f[3]][0]); verts.add(vertices[f[3]][1]); verts.add(vertices[f[3]][2]);
+            double xy1 = radius * Math.cos(stackAngle1);
+            double y1 = radius * Math.sin(stackAngle1);
+
+            double xy2 = radius * Math.cos(stackAngle2);
+            double y2 = radius * Math.sin(stackAngle2);
+
+            for (int j = 0; j < sectors; j++) {
+
+                double sector1 = j * 2 * Math.PI / sectors;
+                double sector2 = (j + 1) * 2 * Math.PI / sectors;
+
+                float x1 = (float)(xy1 * Math.cos(sector1));
+                float z1 = (float)(xy1 * Math.sin(sector1));
+
+                float x2 = (float)(xy2 * Math.cos(sector1));
+                float z2 = (float)(xy2 * Math.sin(sector1));
+
+                float x3 = (float)(xy2 * Math.cos(sector2));
+                float z3 = (float)(xy2 * Math.sin(sector2));
+
+                float x4 = (float)(xy1 * Math.cos(sector2));
+                float z4 = (float)(xy1 * Math.sin(sector2));
+
+                // triangle 1
+                verts.add(x1); verts.add((float)y1); verts.add(z1);
+                verts.add(x2); verts.add((float)y2); verts.add(z2);
+                verts.add(x3); verts.add((float)y2); verts.add(z3);
+
+                // triangle 2
+                verts.add(x1); verts.add((float)y1); verts.add(z1);
+                verts.add(x3); verts.add((float)y2); verts.add(z3);
+                verts.add(x4); verts.add((float)y1); verts.add(z4);
+            }
         }
 
         return verts;
-    }
-
-    private void drawFace(Color color, int[] v1, int[] v2, int[] v3, int[] v4) {
-        GameUtils.applyColor(color);
-
-        glBegin(GL_TRIANGLES);
-
-        // Triangle 1
-        glVertex3iv(v1);
-        glVertex3iv(v2);
-        glVertex3iv(v3);
-
-        // Triangle 2
-        glVertex3iv(v1);
-        glVertex3iv(v3);
-        glVertex3iv(v4);
-
-        glEnd();
     }
 
     @Override
@@ -159,17 +121,15 @@ public class HigherDimensionalTest extends AEWindow {
     public void loopSetup() {
         glEnable(GL_DEPTH_TEST);
 
-        ((ShaderSprite) cube.getComponent(DrawableComponent.class).getShape()).compile();
+        ((ShaderSprite) myObject.getComponent(DrawableComponent.class).getShape()).compile();
     }
 
     @Override
     public void loop(double fps) {
         super.loop(fps);
-        cube.getTransformComponent().transform.rotateY(1 / fps * 2);
-        cube.getTransformComponent().transform.rotateX(1 / fps * 1.25f);
-//        cube.transform.transform.translate(0, 0, -5 / fps);
-        getProjectionMatrix().translate(cameraPosition);
-        getProjectionMatrix().rotate(cameraRotation);
+        setProjectionMatrix(camera.getCombinedProjection());
+
+        camera.moveDir(new Vector3d(0, 0, -1), (float)(1/fps * 10));
     }
 
     public static void main(String[] args) {

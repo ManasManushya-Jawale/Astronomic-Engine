@@ -3,9 +3,10 @@ package org.astroEngine.shapes;
 import java.util.ArrayList;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.std.DrawableComponent;
-import org.astroEngine.comp.std.TransformComponent;
-import org.astroEngine.window.AEWindow;
+import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.comp.TransformComponent;
+import org.astroEngine.graphics.Shape;
+import org.astroEngine.AEWindow;
 
 public class GameObject {
     ArrayList<Component> components;

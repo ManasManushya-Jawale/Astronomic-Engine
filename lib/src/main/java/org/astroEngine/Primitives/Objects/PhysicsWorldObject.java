@@ -1,9 +1,8 @@
-package org.astroEngine.Primitives.Objects.phy;
+package org.astroEngine.Primitives.Objects;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.phy.PhysicsComponent;
-import org.astroEngine.comp.phy.World;
-import org.astroEngine.comp.std.TransformComponent;
+import org.astroEngine.comp.PhysicsComponent;
+import org.astroEngine.comp.TransformComponent;
 import org.astroEngine.shapes.GameObject;
 import org.joml.Vector3d;
 

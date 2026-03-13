@@ -1,4 +1,4 @@
-package org.astroEngine.util.Math;
+package org.astroEngine.util;
 
 import org.joml.Math;
 import org.joml.Matrix4d;

@@ -7,7 +7,7 @@ import org.joml.Math;
 import org.joml.Matrix3d;
 import org.joml.Vector2d;
 
-import org.astroEngine.graphics.std.Polygon2d;
+import org.astroEngine.graphics.Polygon2d;
 
 import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
