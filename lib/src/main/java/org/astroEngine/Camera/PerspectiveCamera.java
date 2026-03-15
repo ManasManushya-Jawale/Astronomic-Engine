@@ -41,8 +41,8 @@ public class PerspectiveCamera extends GameObject {
 
     public Matrix4d getCombinedProjection() {
         return new Matrix4d(projection)
-                .perspective(FOV, aspect, near, far)
-                .translate(position).rotate(rotation);
+                .perspective(FOV, aspect, near, far).rotate(rotation)
+                .translate(position);
     }
 
     public Matrix4d getProjection() {
@@ -92,17 +92,25 @@ public class PerspectiveCamera extends GameObject {
     public void setFar(float far) {
         this.far = far;
     }
+// Inside PerspectiveCamera.java
 
     public void rotate(float x, float y, float z) {
+        // Only update the orientation of the camera
         rotation.rotateXYZ(x, y, z);
     }
 
-    public void rotate(Quaterniond q) {
-        rotation.rotateXYZ(q.x, q.y, q.z);
+    public void moveDir(Vector3d dir, float speed) {
+        // 1. Take the input direction (e.g., 0, 0, -1 for forward)
+        Vector3d direction = new Vector3d(dir);
+
+        // 2. Rotate that direction vector by the camera's current rotation
+        direction.rotate(new Quaterniond(rotation).invert());
+
+        // 3. Scale by speed and add to current position
+        position.add(direction.mul(speed));
     }
 
-    public void moveDir(Vector3d dir, float v) {
-        Vector3d dirVec = new Vector3d(dir).rotate(rotation);
-        position.fma(v, dirVec);
+    public void rotate(Quaterniond q) {
+        rotate((float) q.x, (float) q.y, (float) q.z);
     }
 }

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -40,9 +41,50 @@ public class ShaderSprite extends Shape {
 
     private float[] verticesArr;
 
+    public static final ShaderSprite DEFAULT_SHADER = new ShaderSprite(
+            """
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+uniform mat4 transform;
+
+void main() {
+    gl_Position = transform * vec4(aPos, 1.0);
+}
+                    """,
+            """
+                    #version 330 core
+                    
+                    out vec4 FragColor;
+                    
+                    void main() {
+                        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+                    }""",
+            new ArrayList<Float>()
+    );
+
     private ShaderProgramListener shaderProgramListener = i -> {
         return i;
     };
+
+    public ShaderSprite(ShaderSprite sprite) {
+        super(Color.WHITE);
+
+        String vertexShaderSource = sprite.vertexShaderSource;
+        String fragmentShaderSource = sprite.fragmentShaderSource;
+
+        this.vertexShaderSource = vertexShaderSource;
+        this.fragmentShaderSource = fragmentShaderSource;
+        this.vertices = sprite.vertices;
+
+        this.SHAPE_TYPE = GL_TRIANGLE_FAN;
+
+        this.verticesArr = new float[vertices.size()];
+
+        for (int i = 0; i < vertices.size(); i++) {
+            this.verticesArr[i] = vertices.get(i);
+        }
+    }
 
     public ShaderSprite(String vertexShader, String fragmentShader, List<Float> vertices) {
         super(Color.WHITE);

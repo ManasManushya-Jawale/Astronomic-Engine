@@ -12,6 +12,7 @@ import org.astroEngine.AEWindow;
 import org.astroEngine.util.GameUtils;
 import org.joml.Matrix4d;
 import org.joml.Quaterniond;
+import org.joml.Vector2d;
 import org.joml.Vector3d;
 
 import static java.awt.Color.*;
@@ -124,12 +125,29 @@ public class HigherDimensionalTest extends AEWindow {
         ((ShaderSprite) myObject.getComponent(DrawableComponent.class).getShape()).compile();
     }
 
+    Vector2d mousePos = new Vector2d();
+
     @Override
     public void loop(double fps) {
         super.loop(fps);
         setProjectionMatrix(camera.getCombinedProjection());
 
-        camera.moveDir(new Vector3d(0, 0, -1), (float)(1/fps * 10));
+        System.out.println(camera.position);
+
+        float delta = ((float) (1 / fps));
+
+        if (keyPressed(GLFW_KEY_W)) moveCamera(new Vector3d(0, 0, 1), delta);
+        if (keyPressed(GLFW_KEY_A)) camera.rotate(0, -delta, 0);
+        if (keyPressed(GLFW_KEY_S)) moveCamera(new Vector3d(0, 0, -1), delta);
+        if (keyPressed(GLFW_KEY_D)) camera.rotate(0, delta, 0);
+
+
+    }
+
+    float speed = 20;
+
+    public void moveCamera(Vector3d dir, double delta) {
+        camera.moveDir(dir, (float)delta * speed);
     }
 
     public static void main(String[] args) {

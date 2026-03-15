@@ -3,13 +3,14 @@ package org.astroEngine;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import org.astroEngine.events.ResizeListener;
+import org.astroEngine.Constants.vSyncState;
+import org.astroEngine.Viewports.DefaultViewport;
+import org.astroEngine.events.CallbackListener;
 import org.astroEngine.gui.GUIObject;
 import org.astroEngine.util.GameUtils;
 import org.joml.Matrix4d;
@@ -20,6 +21,7 @@ import org.astroEngine.comp.Component;
 import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.comp.TransformComponent;
 import org.astroEngine.shapes.GameObject;
+import org.lwjgl.system.CallbackI;
 
 /**
  * AEWindow is a window
@@ -38,7 +40,19 @@ public class AEWindow {
     private boolean visible = true;
 
     private Matrix4d projectionMatrix;
-    private ArrayList<ResizeListener> resizeListeners;
+    private CallbackListener callbackListener;
+
+    public vSyncState getVSync() {
+        return vSync;
+    }
+
+    public void setVSync(vSyncState vSync) {
+        this.vSync = vSync;
+
+        GLFW.glfwSwapInterval(vSync.getValue());
+    }
+
+    private vSyncState vSync = vSyncState.ENABLE_IF_SUPPORTS;
 
     public AEWindow(Dimension size, String title) {
         this.size = size;
@@ -46,11 +60,8 @@ public class AEWindow {
 
         this.objects = new ArrayList<>();
         this.guiObjects = new ArrayList<>();
-        resizeListeners = new ArrayList<>();
 
-        resizeListeners.add((window, w, h) -> {
-            glViewport(0, 0, w, h);
-        });
+        callbackListener = new DefaultViewport();
 
         if (!GLFW.glfwInit())
             return;
@@ -58,9 +69,7 @@ public class AEWindow {
         preWindowInitialization();
         window = GLFW.glfwCreateWindow(size.width, size.height, title, 0, 0);
 
-        GLFW.glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
-            resizeListeners.forEach(resizeListener -> resizeListener.resize(win, width, height));
-        });
+        callbackListener.callback(window);
 
         projectionMatrix = new Matrix4d();
 
@@ -127,6 +136,7 @@ public class AEWindow {
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
         loopSetup();
+        GLFW.glfwSwapInterval(vSync.getValue());
 
         long lastFrameTime = System.nanoTime();
         double fps;
@@ -187,5 +197,9 @@ public class AEWindow {
 
     public void applyTransformations(Matrix4d model) {
         GameUtils.applyTransforms(new Matrix4d(projectionMatrix).mul(model));
+    }
+
+    public void applyWindowListener(CallbackListener listener) {
+        this.callbackListener = listener;
     }
 }
