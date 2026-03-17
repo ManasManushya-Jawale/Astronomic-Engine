@@ -13,6 +13,14 @@ plugins {
 group = 'org.astroEngine'
 version = 'a0.1v'
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
 dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
