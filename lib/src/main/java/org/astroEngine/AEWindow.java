@@ -9,19 +9,19 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import org.astroEngine.Constants.vSyncState;
-import org.astroEngine.Viewports.DefaultViewport;
-import org.astroEngine.events.CallbackListener;
-import org.astroEngine.gui.GUIObject;
+import org.astroEngine.Viewports.Viewport;
 import org.astroEngine.util.GameUtils;
 import org.joml.Matrix4d;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 
 import org.astroEngine.comp.Component;
 import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.comp.TransformComponent;
 import org.astroEngine.shapes.GameObject;
-import org.lwjgl.system.CallbackI;
 
 /**
  * AEWindow is a window
@@ -34,13 +34,11 @@ public class AEWindow {
     public Color background = Color.GREEN;
 
     public ArrayList<GameObject> objects;
-    public ArrayList<GUIObject> guiObjects;
 
     public boolean runInBackground = false;
     private boolean visible = true;
 
     private Matrix4d projectionMatrix;
-    private CallbackListener callbackListener;
 
     public vSyncState getVSync() {
         return vSync;
@@ -59,17 +57,12 @@ public class AEWindow {
         this.title = title;
 
         this.objects = new ArrayList<>();
-        this.guiObjects = new ArrayList<>();
-
-        callbackListener = new DefaultViewport();
 
         if (!GLFW.glfwInit())
             return;
 
         preWindowInitialization();
         window = GLFW.glfwCreateWindow(size.width, size.height, title, 0, 0);
-
-        callbackListener.callback(window);
 
         projectionMatrix = new Matrix4d();
 
@@ -107,10 +100,6 @@ public class AEWindow {
             }
         }
 
-        for (GUIObject object : guiObjects) {
-            object.paintComponent();
-        }
-
         GLFW.glfwSwapBuffers(window);
         GLFW.glfwPollEvents();
     }
@@ -130,6 +119,7 @@ public class AEWindow {
     }
 
     public void preWindowInitialization() { }
+
     public void loopSetup() { }
 
     private void startDisplaying() {
@@ -187,19 +177,21 @@ public class AEWindow {
         objects.remove(object);
     }
 
-    public void removeGUIObject(GUIObject guiObject) {
-        guiObjects.remove(guiObject);
-    }
-
-    public void addGUIObject(GUIObject guiObject) {
-        guiObjects.add(guiObject);
-    }
-
     public void applyTransformations(Matrix4d model) {
         GameUtils.applyTransforms(new Matrix4d(projectionMatrix).mul(model));
     }
 
-    public void applyWindowListener(CallbackListener listener) {
-        this.callbackListener = listener;
+     public void setViewport(Viewport viewport) {
+        GLFW.glfwSetWindowSizeCallback(window, (win, w ,h) -> {
+            viewport.apply(window, w, h);
+        });
+    }
+
+    public void setResizeCallback(GLFWWindowSizeCallback callback) {
+        GLFW.glfwSetWindowSizeCallback(window, callback);
+    }
+
+    public void setMouseMoveCallback(GLFWMouseButtonCallback callback) {
+        GLFW.glfwSetMouseButtonCallback(window, callback);
     }
 }

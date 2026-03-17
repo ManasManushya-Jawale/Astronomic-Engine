@@ -6,7 +6,7 @@ import org.astroEngine.AEWindow;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 
-public class OrthographicCamera extends GameObject {
+public class OrthographicCamera extends Camera {
     private Vector3d nearBounds, farBounds;
     private Matrix4d projection;
 

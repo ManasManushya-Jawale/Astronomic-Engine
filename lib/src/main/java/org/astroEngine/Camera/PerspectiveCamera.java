@@ -6,7 +6,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
-public class PerspectiveCamera extends GameObject {
+public class PerspectiveCamera extends Camera {
     private Matrix4d projection = new Matrix4d();
 
     private float FOV;
@@ -37,6 +37,13 @@ public class PerspectiveCamera extends GameObject {
 
         position = new Vector3d();
         rotation = new Quaterniond();
+    }
+
+    public void perspective(float fov, float aspect, float near, float far) {
+        this.FOV = fov;
+        this.aspect = aspect;
+        this.near = near;
+        this.far = far;
     }
 
     public Matrix4d getCombinedProjection() {

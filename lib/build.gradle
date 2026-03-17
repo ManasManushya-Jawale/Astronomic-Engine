@@ -12,32 +12,6 @@ plugins {
 
 group = 'org.astroEngine'
 version = 'a0.1v'
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId = "org.astroEngine"
-            artifactId = "astro-engine"
-            version = "0.1.0"
-        }
-    }
-    repositories {
-        maven {
-            url = uri("${buildDir}/repo") // local test repo
-        }
-    }
-}
-
-repositories {
-    maven {
-        url = uri("${buildDir}/repo")
-    } // local repo for testing } } }
-    repositories {
-        // Use Maven Central for resolving dependencies.
-        mavenCentral()
-    }
-
-}
 
 dependencies {
     // Use JUnit Jupiter for testing.
@@ -71,6 +45,13 @@ dependencies {
 
     implementation 'org.joml:joml:1.10.8'
     implementation 'org.jdom:jdom2:2.0.6.1'
+
+    implementation "io.github.spair:imgui-java-binding:1.86.11"
+    implementation "io.github.spair:imgui-java-lwjgl3:1.86.11"
+    implementation "io.github.spair:imgui-java-natives-windows:1.86.11"
+
+    implementation "io.github.spair:imgui-java-natives-linux:1.86.11"
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.

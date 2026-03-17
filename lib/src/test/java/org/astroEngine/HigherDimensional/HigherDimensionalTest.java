@@ -1,17 +1,14 @@
 package org.astroEngine.HigherDimensional;
 
 import org.astroEngine.Camera.PerspectiveCamera;
-import org.astroEngine.comp.Component;
+import org.astroEngine.Viewports.Viewport;
 import org.astroEngine.comp.DrawableComponent;
 import org.astroEngine.graphics.ShaderSprite;
-import org.astroEngine.graphics.Shape;
+import org.astroEngine.graphics.geometry.Cube;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.util.FileUtils;
 import org.astroEngine.AEWindow;
-import org.astroEngine.util.GameUtils;
-import org.joml.Matrix4d;
-import org.joml.Quaterniond;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 
@@ -25,8 +22,11 @@ import java.util.ArrayList;
 public class HigherDimensionalTest extends AEWindow {
 
     private final GameObject myObject;
+    private final GameObject cube;
 
     private PerspectiveCamera camera;
+
+    private Viewport viewport;
 
     public HigherDimensionalTest() {
         super(new Dimension(800, 600), "Higher Dimensional");
@@ -35,6 +35,23 @@ public class HigherDimensionalTest extends AEWindow {
 
         camera = new PerspectiveCamera((float) Math.toRadians(45), 800/600f, 0.1f, 100);
         camera.position.add(0, 0, -5);
+
+        viewport = new Viewport(camera) {
+            @Override
+            public void apply(long window, int w, int h) {
+                glViewport(0, 0, w, h);
+
+                ((PerspectiveCamera) camera).perspective((float) Math.toRadians(45), ((float)w/h), 0.1f, 100);
+            }
+        };
+
+        glfwSetWindowSizeCallback(window, (win, w ,h) -> {
+            viewport.apply(win, w, h);
+        });
+
+        glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
+            System.out.println("Mouse moved: " + xpos + ", " + ypos);
+        });
 
         ArrayList<Float> points = generateSphere(1, 20, 20);
 
@@ -49,6 +66,14 @@ public class HigherDimensionalTest extends AEWindow {
                 .build();
 
         addObject(myObject);
+
+
+        cube = new GameObjectBuilder()
+                .setTranslate(new Vector3d(2, 2, 0))
+                .addDrawable(new Cube(4, 4, 4))
+                .build();
+
+        addObject(cube);
     }
 
     public static ArrayList<Float> generateSphere(float radius, int stacks, int sectors) {
@@ -123,6 +148,7 @@ public class HigherDimensionalTest extends AEWindow {
         glEnable(GL_DEPTH_TEST);
 
         ((ShaderSprite) myObject.getComponent(DrawableComponent.class).getShape()).compile();
+        ((ShaderSprite) cube.getComponent(DrawableComponent.class).getShape()).compile();
     }
 
     Vector2d mousePos = new Vector2d();
@@ -132,15 +158,13 @@ public class HigherDimensionalTest extends AEWindow {
         super.loop(fps);
         setProjectionMatrix(camera.getCombinedProjection());
 
-        System.out.println(camera.position);
-
         float delta = ((float) (1 / fps));
+        float rotation = 5;
 
         if (keyPressed(GLFW_KEY_W)) moveCamera(new Vector3d(0, 0, 1), delta);
-        if (keyPressed(GLFW_KEY_A)) camera.rotate(0, -delta, 0);
+        if (keyPressed(GLFW_KEY_A)) camera.rotate(0, -delta*rotation, 0);
         if (keyPressed(GLFW_KEY_S)) moveCamera(new Vector3d(0, 0, -1), delta);
-        if (keyPressed(GLFW_KEY_D)) camera.rotate(0, delta, 0);
-
+        if (keyPressed(GLFW_KEY_D)) camera.rotate(0, delta*rotation, 0);
 
     }
 

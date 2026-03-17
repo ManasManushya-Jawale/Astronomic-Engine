@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -43,24 +44,29 @@ public class ShaderSprite extends Shape {
 
     public static final ShaderSprite DEFAULT_SHADER = new ShaderSprite(
             """
-#version 330 core
-layout (location = 0) in vec3 aPos;
-
-uniform mat4 transform;
-
-void main() {
-    gl_Position = transform * vec4(aPos, 1.0);
-}
+                    #version 330 core
+                    
+                    layout(location = 0) in vec3 aPos;
+                    uniform mat4 transform;
+                    
+                    out vec3 pColor;
+                    
+                    void main() {
+                        gl_Position = transform * vec4(aPos, 1.0);
+                    
+                        pColor = (aPos + 1) / 2;
+                    }
                     """,
             """
                     #version 330 core
                     
                     out vec4 FragColor;
+                    in vec3 pColor;
                     
                     void main() {
-                        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-                    }""",
-            new ArrayList<Float>()
+                    
+                        FragColor = vec4(pColor, 1);
+                    }"""
     );
 
     private ShaderProgramListener shaderProgramListener = i -> {
@@ -79,10 +85,14 @@ void main() {
 
         this.SHAPE_TYPE = GL_TRIANGLE_FAN;
 
-        this.verticesArr = new float[vertices.size()];
+        if (!sprite.vertices.isEmpty()) {
+            this.verticesArr = new float[vertices.size()];
 
-        for (int i = 0; i < vertices.size(); i++) {
-            this.verticesArr[i] = vertices.get(i);
+            for (int i = 0; i < vertices.size(); i++) {
+                this.verticesArr[i] = vertices.get(i);
+            }
+        }else {
+            this.verticesArr = new float[3];
         }
     }
 
@@ -102,6 +112,18 @@ void main() {
         }
     }
 
+    public ShaderSprite(String vertexShader, String fragmentShader) {
+        super(Color.WHITE);
+
+        this.vertexShaderSource = vertexShader;
+        this.fragmentShaderSource = fragmentShader;
+
+        this.SHAPE_TYPE = GL_TRIANGLE_FAN;
+
+        this.vertices = new ArrayList<>();
+        this.verticesArr = new float[3];
+    }
+
     public ShaderSprite(int SHAPE_TYPE, List<Float> vertices, String vertexShaderSource, String fragmentShaderSource) {
         super(Color.WHITE);
         this.SHAPE_TYPE = SHAPE_TYPE;
@@ -115,8 +137,9 @@ void main() {
             this.verticesArr[i] = vertices.get(i);
         }
 
+    }
 
-    }   @Override
+    @Override
     public void draw(Matrix4d transform) {
 
         int VAO = info.VAO();
@@ -151,11 +174,13 @@ void main() {
     }
 
     private VertexInfo createVertexAttr() {
+        int len = verticesArr.length / 3;
+        System.out.println(len);
+
         for (int i = 0; i < verticesArr.length; i++) {
             verticesArr[i] = vertices.get(i);
         }
 
-        int len = verticesArr.length / 3;
 
         int VBO = glGenBuffers();
 
@@ -261,5 +286,17 @@ void main() {
 
     public void setShaderProgramListener(ShaderProgramListener shaderProgramListener) {
         this.shaderProgramListener = shaderProgramListener;
+    }
+
+    public float[] getVerticesArr() {
+        return verticesArr;
+    }
+
+    public void setVerticesArr(float[] verticesArr) {
+        this.verticesArr = verticesArr;
+        this.vertices = new ArrayList<>();
+        for (int i = 0; i < verticesArr.length; i++) {
+            this.vertices.add(verticesArr[i]);
+        }
     }
 }
