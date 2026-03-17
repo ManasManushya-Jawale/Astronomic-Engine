@@ -24,7 +24,7 @@ import org.astroEngine.comp.TransformComponent;
 import org.astroEngine.shapes.GameObject;
 
 /**
- * AEWindow is a window
+ * AEWindow is a window that does alot of things
  */
 public class AEWindow {
     public long window;
