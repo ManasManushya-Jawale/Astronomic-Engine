@@ -7,8 +7,8 @@ import java.awt.Rectangle;
 import org.joml.Vector3d;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.DrawableComponent;
-import org.astroEngine.comp.TransformComponent;
+import org.astroEngine.comp.ShapeComp;
+import org.astroEngine.comp.Transform;
 import org.astroEngine.graphics.Graphics2DSprite;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.Shape;
@@ -30,22 +30,22 @@ public class GameObjectBuilder {
     }
 
     public GameObjectBuilder setTranslate(Vector3d pos) {
-        object.getComponent(TransformComponent.class).setPosition(pos);
+        object.getComponent(Transform.class).setPosition(pos);
         return this;
     }
 
     public GameObjectBuilder setRotation(Vector3d rot) {
-        object.getComponent(TransformComponent.class).setRotation(rot);
+        object.getComponent(Transform.class).setRotation(rot);
         return this;
     }
 
     public GameObjectBuilder setScale(Vector3d scale) {
-        object.getComponent(TransformComponent.class).setScale(scale);
+        object.getComponent(Transform.class).setScale(scale);
         return this;
     }
 
     public GameObjectBuilder addDrawable(Shape shape) {
-        addComponent(new DrawableComponent(shape));
+        addComponent(new ShapeComp(shape));
         return this;
     }
 

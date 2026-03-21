@@ -13,18 +13,22 @@ import org.astroEngine.Viewports.Viewport;
 import org.astroEngine.util.GameUtils;
 import org.joml.Matrix4d;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.DrawableComponent;
-import org.astroEngine.comp.TransformComponent;
+import org.astroEngine.comp.ShapeComp;
+import org.astroEngine.comp.Transform;
 import org.astroEngine.shapes.GameObject;
 
 /**
- * AEWindow is a window that does alot of things
+ * AEWindow is a window that does alot of things.
+ * This window is used to display objects onto screen and is ECS based.
+ * <ul>
+ *      <li>It has Entity Component System built-in</li>
+ *     <li>It has a Projection Matrix to be used by camera</li>
+ * </ul>
  */
 public class AEWindow {
     public long window;
@@ -89,10 +93,10 @@ public class AEWindow {
                 background.getAlpha() / 255f);
 
         for (GameObject object : objects) {
-            TransformComponent transform;
-            if ((transform = object.getComponent(TransformComponent.class)) != null) {
-                DrawableComponent draw;
-                if ((draw = object.getComponent(DrawableComponent.class)) != null) {
+            Transform transform;
+            if ((transform = object.getComponent(Transform.class)) != null) {
+                ShapeComp draw;
+                if ((draw = object.getComponent(ShapeComp.class)) != null) {
                     Matrix4d mvp = new Matrix4d(projectionMatrix)
                             .mul(transform.getTransform());
                     draw.getShape().draw(mvp);
@@ -118,8 +122,14 @@ public class AEWindow {
         }
     }
 
+    /**
+     * This runs before the window is created
+     */
     public void preWindowInitialization() { }
 
+    /***
+     This runs after the window is created and GL capabilities are created
+     */
     public void loopSetup() { }
 
     private void startDisplaying() {
@@ -132,6 +142,8 @@ public class AEWindow {
         double fps;
 
         while (!GLFW.glfwWindowShouldClose(window)) {
+            beforeDraw();
+
             draw();
 
             long now = System.nanoTime();
@@ -146,6 +158,10 @@ public class AEWindow {
         GLFW.glfwTerminate();
     }
 
+    public void beforeDraw() {
+
+    }
+
     public void hideWindow() {
         GLFW.glfwHideWindow(window);
         visible = false;
@@ -156,6 +172,10 @@ public class AEWindow {
         visible = true;
     }
 
+    /**
+     * <b>Note: </b>this does not destroy the object but instead
+     * only removes the window from openGL's system
+     */
     public void destroyWindow() {
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwSetErrorCallback(null).free();

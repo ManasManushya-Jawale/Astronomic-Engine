@@ -6,7 +6,8 @@ import java.util.Arrays;
 import org.astroEngine.Camera.OrthographicCamera;
 import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Primitives.Objects.ImageObject;
-import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.Viewports.ScaleViewport;
+import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.graphics.ShaderSprite;
 import org.astroEngine.util.FileUtils;
 import org.joml.Quaterniond;
@@ -27,7 +28,10 @@ public class MyWindow extends AEWindow {
     private final DrawableObject shaderObj;
     public GameObject car;
     public GameObject button;
+
     public OrthographicCamera camera;
+    public ScaleViewport viewport;
+
     public float speed = 3/2f;
     public float steer = 1;
 
@@ -38,6 +42,9 @@ public class MyWindow extends AEWindow {
 
         camera = new OrthographicCamera(this, 0, 800, 600, 0, -1, 1);
         addObject(camera);
+
+        viewport = new ScaleViewport(camera);
+        setViewport(viewport);
 
         shaderObj = (DrawableObject) new GameObjectBuilder(new DrawableObject(new ShaderSprite(
                 FileUtils.readFile(FileUtils.internal("/shaders/pulsing/Vertex.glsl")),
@@ -122,7 +129,7 @@ public class MyWindow extends AEWindow {
     public void loopSetup() {
         super.loopSetup();
         glDisable(GL_DEPTH_TEST);
-        ((ShaderSprite) shaderObj.getComponent(DrawableComponent.class).getShape()).compile();
+        ((ShaderSprite) shaderObj.getComponent(ShapeComp.class).getShape()).compile();
     }
 
     public static void main(String[] arg) throws Exception {

@@ -8,7 +8,7 @@ import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import org.astroEngine.comp.Component;
-import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.graphics.Polygon2d;
@@ -25,7 +25,7 @@ public class ImageRenderingTestWindow extends AEWindow {
         imageObject = new GameObjectBuilder()
                 .setTranslate(new Vector3d(200, 100, 0))
                 .setScale(new Vector3d(5))
-                .addComponent(new DrawableComponent(
+                .addComponent(new ShapeComp(
                         new ImageSprite(FileUtils.internal("/Man.png"), true)))
                 .build();
 
@@ -35,7 +35,7 @@ public class ImageRenderingTestWindow extends AEWindow {
 
         triangle = new GameObjectBuilder()
                 .setTranslate(new Vector3d(300, 200, 0))
-                .addComponent(new DrawableComponent(new Polygon2d(
+                .addComponent(new ShapeComp(new Polygon2d(
                         Color.RED,
                         new Vector2d[] {
                                 new Vector2d(0, 0),

@@ -3,7 +3,7 @@ package org.astroEngine.physics.Simple;
 import org.astroEngine.Primitives.Objects.PhysicsWorldObject;
 import org.astroEngine.comp.Component;
 import org.astroEngine.comp.PhysicsComponent;
-import org.astroEngine.comp.DrawableComponent;
+import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.Shape;
 import org.astroEngine.util.GameUtils;
@@ -29,7 +29,7 @@ public class SimplePhysics extends AEWindow {
 
         gameObject = new GameObject();
         gameObject.transform.setPosition(new Vector3d(200, 100,0));
-        gameObject.addComponent(new DrawableComponent(new Shape(Color.WHITE) {
+        gameObject.addComponent(new ShapeComp(new Shape(Color.WHITE) {
             @Override
             public void draw(Matrix4d transform) {
                 GameUtils.clearState();
@@ -84,7 +84,7 @@ public class SimplePhysics extends AEWindow {
 
         addObject(new GameObject(){{
             getTransformComponent().getTransform().translate(new Vector3d(200,200,0));
-            addComponent(new DrawableComponent(new Shape(Color.GRAY) {
+            addComponent(new ShapeComp(new Shape(Color.GRAY) {
                 @Override
                 public void draw(Matrix4d transform) {
                     GameUtils.clearState();

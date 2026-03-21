@@ -23,7 +23,7 @@ public class Cube extends ShaderSprite {
     ArrayList<Float> result;
 
     public Cube(float l, float b, float w) {
-        super(DEFAULT_SHADER);
+        super(DEFAULT_SHADER_SPRITE);
 
         SHAPE_TYPE = GL11.GL_QUADS;
 

@@ -4,7 +4,7 @@ import org.astroEngine.shapes.GameObject;
 import org.astroEngine.util.annot.RequiresComponent;
 import org.joml.Vector3d;
 
-@RequiresComponent(TransformComponent.class)
+@RequiresComponent(Transform.class)
 public class PhysicsComponent extends Component {
 
     public Vector3d position;
@@ -28,7 +28,7 @@ public class PhysicsComponent extends Component {
     @Override
     public void setParent(GameObject parent) {
         super.setParent(parent);
-        TransformComponent transform = (TransformComponent) parent.getComponent(TransformComponent.class);
+        Transform transform = (Transform) parent.getComponent(Transform.class);
         position.set(transform.transform.getTranslation(new Vector3d())); // sync initial position
     }
 

@@ -2,7 +2,7 @@ package org.astroEngine.Primitives.Objects;
 
 import org.astroEngine.comp.Component;
 import org.astroEngine.comp.PhysicsComponent;
-import org.astroEngine.comp.TransformComponent;
+import org.astroEngine.comp.Transform;
 import org.astroEngine.shapes.GameObject;
 import org.joml.Vector3d;
 
@@ -17,8 +17,8 @@ public class PhysicsWorldObject extends GameObject {
             public void update(float delta) {
                 for (int i = 0; i < parent.getParent().objects.size(); i++) {
                     PhysicsComponent pc1;
-                    TransformComponent tc1;
-                    tc1 = parent.getParent().objects.get(i).getComponent(TransformComponent.class);
+                    Transform tc1;
+                    tc1 = parent.getParent().objects.get(i).getComponent(Transform.class);
                     if ((pc1 = parent.getParent().objects.get(i).getComponent(PhysicsComponent.class)) != null) {
 
                         pc1.acceleration.fma(delta, gravity);

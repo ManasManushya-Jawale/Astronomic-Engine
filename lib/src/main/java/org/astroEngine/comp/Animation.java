@@ -7,8 +7,8 @@ import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.util.annot.RequiresComponent;
 
-@RequiresComponent(DrawableComponent.class)
-public class AnimationComponent extends Component {
+@RequiresComponent(ShapeComp.class)
+public class Animation extends Component {
     private ArrayList<BufferedImage> keyframes;
     private float timer;
     private boolean start;
@@ -16,9 +16,9 @@ public class AnimationComponent extends Component {
     private double elapsedTime = 0;
     private int keyframe = 0;
 
-    public DrawableComponent draw;
+    public ShapeComp draw;
 
-    public AnimationComponent(ArrayList<BufferedImage> keyframes, float timer) {
+    public Animation(ArrayList<BufferedImage> keyframes, float timer) {
         this.keyframes = keyframes;
         this.timer = timer;
         start = false;
@@ -30,7 +30,7 @@ public class AnimationComponent extends Component {
     public void setParent(GameObject parent) {
         // TODO Auto-generated method stub
         super.setParent(parent);
-        this.draw = parent.getComponent(DrawableComponent.class);
+        this.draw = parent.getComponent(ShapeComp.class);
     }
 
     @Override

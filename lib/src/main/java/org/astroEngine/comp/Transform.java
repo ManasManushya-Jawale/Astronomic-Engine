@@ -3,14 +3,14 @@ package org.astroEngine.comp;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 
-public class TransformComponent extends Component {
+public class Transform extends Component {
     private Vector3d position;
     private Vector3d rotation; // radians (x,y,z)
     private Vector3d scale;
     private Vector3d pivot; // local pivot point
     public Matrix4d transform;
 
-    public TransformComponent() {
+    public Transform() {
         position = new Vector3d(0, 0, 0);
         rotation = new Vector3d(0, 0, 0);
         scale = new Vector3d(1, 1, 1);

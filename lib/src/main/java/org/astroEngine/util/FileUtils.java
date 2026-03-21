@@ -1,9 +1,12 @@
 package org.astroEngine.util;
 
+import org.astroEngine.graphics.ShaderSprite;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.List;
 
 public class FileUtils {
     private static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
@@ -27,5 +30,13 @@ public class FileUtils {
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static ShaderSprite getShaderSprite(File frag, File vert, List<Float> points) {
+        String fragStr = readFile(frag);
+        String vertStr = readFile(vert);
+        return new ShaderSprite(
+                fragStr, vertStr, points
+        );
     }
 }

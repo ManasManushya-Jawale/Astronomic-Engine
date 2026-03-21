@@ -3,6 +3,9 @@
  */
 package org.astroEngine;
 
+/**
+ * A Simple library class
+ */
 public class Library {
   public boolean someLibraryMethod() {
     return true;

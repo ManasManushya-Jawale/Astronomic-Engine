@@ -1,4 +1,4 @@
-package org.astroEngine.comp;
+package org.astroEngine.records;
 
 import org.joml.Vector3d;
 

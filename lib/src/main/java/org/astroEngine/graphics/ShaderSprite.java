@@ -1,6 +1,7 @@
 package org.astroEngine.graphics;
 
 import org.astroEngine.events.ShaderProgramListener;
+import org.astroEngine.records.Shader;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
 
@@ -37,12 +38,13 @@ public class ShaderSprite extends Shape {
     private int transformLoc;
     VertexInfo info;
 
-    public List<Float> vertices;
+    private List<Float> vertices;
+
     public int SHAPE_TYPE;
 
     private float[] verticesArr;
 
-    public static final ShaderSprite DEFAULT_SHADER = new ShaderSprite(
+    public static final ShaderSprite DEFAULT_SHADER_SPRITE = new ShaderSprite(
             """
                     #version 330 core
                     
@@ -67,6 +69,33 @@ public class ShaderSprite extends Shape {
                     
                         FragColor = vec4(pColor, 1);
                     }"""
+    );
+
+    public static final Shader DEFAULT_SHADER = new Shader(
+            """
+                    #version 330 core
+                    
+                    out vec4 FragColor;
+                    in vec3 pColor;
+                    
+                    void main() {
+                    
+                        FragColor = vec4(pColor, 1);
+                    }""",
+            """
+                    #version 330 core
+                    
+                    layout(location = 0) in vec3 aPos;
+                    uniform mat4 transform;
+                    
+                    out vec3 pColor;
+                    
+                    void main() {
+                        gl_Position = transform * vec4(aPos, 1.0);
+                    
+                        pColor = (aPos + 1) / 2;
+                    }
+                    """
     );
 
     private ShaderProgramListener shaderProgramListener = i -> {
@@ -96,6 +125,20 @@ public class ShaderSprite extends Shape {
         }
     }
 
+    public ShaderSprite(Shader shader, List<Float> vertices, int type) {
+        super(Color.WHITE);
+
+        String vertexShaderSource = shader.vert();
+        String fragmentShaderSource = shader.frag();
+
+        this.vertexShaderSource = vertexShaderSource;
+        this.fragmentShaderSource = fragmentShaderSource;
+
+        this.SHAPE_TYPE = type;
+
+        setVertices(vertices);
+    }
+
     public ShaderSprite(String vertexShader, String fragmentShader, List<Float> vertices) {
         super(Color.WHITE);
 
@@ -105,11 +148,7 @@ public class ShaderSprite extends Shape {
 
         this.SHAPE_TYPE = GL_TRIANGLE_FAN;
 
-        this.verticesArr = new float[vertices.size()];
-
-        for (int i = 0; i < vertices.size(); i++) {
-            this.verticesArr[i] = vertices.get(i);
-        }
+        setVertices(vertices);
     }
 
     public ShaderSprite(String vertexShader, String fragmentShader) {
@@ -118,7 +157,7 @@ public class ShaderSprite extends Shape {
         this.vertexShaderSource = vertexShader;
         this.fragmentShaderSource = fragmentShader;
 
-        this.SHAPE_TYPE = GL_TRIANGLE_FAN;
+        this.SHAPE_TYPE = GL_TRIANGLES;
 
         this.vertices = new ArrayList<>();
         this.verticesArr = new float[3];
@@ -174,13 +213,7 @@ public class ShaderSprite extends Shape {
     }
 
     private VertexInfo createVertexAttr() {
-        int len = verticesArr.length / 3;
-        System.out.println(len);
-
-        for (int i = 0; i < verticesArr.length; i++) {
-            verticesArr[i] = vertices.get(i);
-        }
-
+        int len = vertices.size() / 3;
 
         int VBO = glGenBuffers();
 
@@ -232,6 +265,8 @@ public class ShaderSprite extends Shape {
             System.err.println(glGetShaderInfoLog(fragmentShader));
         }
 
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
     }
 
     public String getFragmentShaderSource() {
@@ -240,7 +275,6 @@ public class ShaderSprite extends Shape {
 
     public void setFragmentShaderSource(String fragmentShaderSource) {
         this.fragmentShaderSource = fragmentShaderSource;
-        compile();
     }
 
     public String getVertexShaderSource() {
@@ -249,7 +283,6 @@ public class ShaderSprite extends Shape {
 
     public void setVertexShaderSource(String vertexShaderSource) {
         this.vertexShaderSource = vertexShaderSource;
-        compile();
     }
 
     public int getShaderProgram() {
@@ -297,6 +330,19 @@ public class ShaderSprite extends Shape {
         this.vertices = new ArrayList<>();
         for (int i = 0; i < verticesArr.length; i++) {
             this.vertices.add(verticesArr[i]);
+        }
+    }
+
+    public List<Float> getVertices() {
+        return vertices;
+    }
+
+    public void setVertices(List<Float> vertices) {
+        this.vertices = vertices;
+
+        this.verticesArr = new float[vertices.size()];
+        for (int i = 0; i < vertices.size(); i++) {
+            this.verticesArr[i] = vertices.get(i);
         }
     }
 }
