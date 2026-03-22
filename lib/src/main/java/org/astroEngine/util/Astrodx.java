@@ -2,7 +2,6 @@ package org.astroEngine.util;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -12,16 +11,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
 
-public class GameUtils {
+public class Astrodx {
     public static void applyTransforms(Matrix4d mvp) {
         DoubleBuffer db = BufferUtils.createDoubleBuffer(16);
         mvp.get(db);
@@ -138,7 +135,7 @@ public class GameUtils {
 
             paths.forEach(path -> {
                 try {
-                    images.add(ImageIO.read(FileUtils.internal(path)));
+                    images.add(ImageIO.read(Files.internal(path)));
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

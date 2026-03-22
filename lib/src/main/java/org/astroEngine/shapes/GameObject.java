@@ -7,6 +7,7 @@ import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.comp.Transform;
 import org.astroEngine.graphics.Shape;
 import org.astroEngine.AEWindow;
+import org.joml.Matrix4d;
 
 public class GameObject {
     ArrayList<Component> components;
@@ -71,5 +72,8 @@ public class GameObject {
     public void setParent(AEWindow parent) {
         this.parent = parent;
     }
-    
+
+    public Matrix4d getTransform() {
+        return getTransformComponent().transform;
+    }
 }

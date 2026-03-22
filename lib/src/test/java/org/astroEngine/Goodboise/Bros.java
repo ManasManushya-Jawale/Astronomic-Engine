@@ -5,8 +5,8 @@ import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.util.Builder.GameObjectBuilder;
-import org.astroEngine.util.FileUtils;
-import org.astroEngine.util.GameUtils;
+import org.astroEngine.util.Files;
+import org.astroEngine.util.Astrodx;
 import org.astroEngine.AEWindow;
 import org.joml.Vector3d;
 import java.awt.*;
@@ -36,9 +36,9 @@ public class Bros extends AEWindow {
                 .setTranslate(new Vector3d(100, 100, 0))
                 .setScale(new Vector3d(1))
                 .addComponent(new ShapeComp(
-                        new ImageSprite(FileUtils.internal("/Manas.png"))))
-                .addComponent(new Animation(GameUtils.packTextureFromResource(
-                        FileUtils.internal("/pack/testPack/pack.txt")), .25f){{
+                        new ImageSprite(Files.internal("/Manas.png"))))
+                .addComponent(new Animation(Astrodx.packTextureFromResource(
+                        Files.internal("/pack/testPack/pack.txt")), .25f){{
                             start();
                         }})
                 .build();

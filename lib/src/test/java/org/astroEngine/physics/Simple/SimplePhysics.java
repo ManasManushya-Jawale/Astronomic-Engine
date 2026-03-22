@@ -6,7 +6,7 @@ import org.astroEngine.comp.PhysicsComponent;
 import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.Shape;
-import org.astroEngine.util.GameUtils;
+import org.astroEngine.util.Astrodx;
 import org.astroEngine.AEWindow;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
@@ -32,9 +32,9 @@ public class SimplePhysics extends AEWindow {
         gameObject.addComponent(new ShapeComp(new Shape(Color.WHITE) {
             @Override
             public void draw(Matrix4d transform) {
-                GameUtils.clearState();
-                GameUtils.applyColor(Color.WHITE);
-                GameUtils.applyTransforms(transform);
+                Astrodx.clearState();
+                Astrodx.applyColor(Color.WHITE);
+                Astrodx.applyTransforms(transform);
                 glBegin(GL_POLYGON);
                 float radius = 50;
                 for (int theta=0 ;theta<360;theta++) {
@@ -87,9 +87,9 @@ public class SimplePhysics extends AEWindow {
             addComponent(new ShapeComp(new Shape(Color.GRAY) {
                 @Override
                 public void draw(Matrix4d transform) {
-                    GameUtils.clearState();
-                    GameUtils.applyColor(color);
-                    GameUtils.applyTransforms(transform);
+                    Astrodx.clearState();
+                    Astrodx.applyColor(color);
+                    Astrodx.applyTransforms(transform);
 
                     glBegin(GL_LINE_STRIP);
                     for (Vector3d vertex : vertexes) {

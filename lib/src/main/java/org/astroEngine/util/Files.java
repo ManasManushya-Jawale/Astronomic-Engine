@@ -5,10 +5,9 @@ import org.astroEngine.graphics.ShaderSprite;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.List;
 
-public class FileUtils {
+public class Files {
     private static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
     public static File internal(String resourcePath) {
@@ -26,7 +25,7 @@ public class FileUtils {
 
     public static String readFile(File file) {
         try {
-            return Files.readString(file.toPath());
+            return java.nio.file.Files.readString(file.toPath());
         }catch (Exception e) {
             throw new RuntimeException(e);
         }

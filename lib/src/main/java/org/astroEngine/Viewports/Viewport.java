@@ -3,7 +3,7 @@ package org.astroEngine.Viewports;
 import org.astroEngine.Camera.Camera;
 
 public class Viewport {
-    private Camera camera;
+    public Camera camera;
     private int width, height;
 
     public Viewport(Camera camera) {

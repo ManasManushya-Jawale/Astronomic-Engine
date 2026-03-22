@@ -18,15 +18,13 @@ public class ImGUIObject extends GameObject {
     private ImGuiImplGl3 imGuiGl3;
     private ImGuiIO io;
 
-    public ImGUIObject(String name, Runnable draw) {
+    public ImGUIObject(Runnable draw) {
         this.action = draw;
 
         addDrawable(new Shape(Color.WHITE) {
             @Override
             public void draw(Matrix4d transform) {
-                ImGui.begin(name);
                 action.run();
-                ImGui.end();
 
                 render();
             }

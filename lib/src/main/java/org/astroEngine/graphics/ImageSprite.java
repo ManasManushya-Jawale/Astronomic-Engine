@@ -15,7 +15,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import org.astroEngine.util.GameUtils;
+import org.astroEngine.util.Astrodx;
 import org.astroEngine.util.Builder.Shapes;
 
 public class ImageSprite extends Shape {
@@ -135,7 +135,7 @@ public class ImageSprite extends Shape {
 
     @Override
     public void draw(Matrix4d transform) {
-        GameUtils.applyColor(color);
+        Astrodx.applyColor(color);
         loadTextureIfNeeded();
         if (textureId == 0)
             return;

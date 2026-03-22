@@ -12,7 +12,7 @@ import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.graphics.Polygon2d;
-import org.astroEngine.util.FileUtils;
+import org.astroEngine.util.Files;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.AEWindow;
 
@@ -26,7 +26,7 @@ public class ImageRenderingTestWindow extends AEWindow {
                 .setTranslate(new Vector3d(200, 100, 0))
                 .setScale(new Vector3d(5))
                 .addComponent(new ShapeComp(
-                        new ImageSprite(FileUtils.internal("/Man.png"), true)))
+                        new ImageSprite(Files.internal("/Man.png"), true)))
                 .build();
 
         objects.add(imageObject);

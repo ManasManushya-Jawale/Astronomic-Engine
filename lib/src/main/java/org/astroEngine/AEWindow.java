@@ -7,10 +7,13 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.astroEngine.Constants.vSyncState;
 import org.astroEngine.Viewports.Viewport;
-import org.astroEngine.util.GameUtils;
+import org.astroEngine.util.Astrodx;
 import org.joml.Matrix4d;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -39,6 +42,9 @@ public class AEWindow {
 
     public ArrayList<GameObject> objects;
 
+    private Queue<GameObject> addQueue = new LinkedList<>(),
+            removeQueue = new LinkedList<>();
+
     public boolean runInBackground = false;
     private boolean visible = true;
 
@@ -61,6 +67,8 @@ public class AEWindow {
         this.title = title;
 
         this.objects = new ArrayList<>();
+        addQueue = new LinkedList<>();
+        removeQueue = new LinkedList<>();
 
         if (!GLFW.glfwInit())
             return;
@@ -159,7 +167,13 @@ public class AEWindow {
     }
 
     public void beforeDraw() {
+        objects.addAll(addQueue);
+        for (GameObject remove : removeQueue) {
+            objects.remove(remove);
+        }
 
+        addQueue.clear();
+        removeQueue.clear();
     }
 
     public void hideWindow() {
@@ -189,16 +203,16 @@ public class AEWindow {
 
     public void addObject(GameObject object) {
         object.setParent(this);
-        objects.add(object);
+        addQueue.add(object);
     }
 
     public void removeObject(GameObject object) {
         object.setParent(null);
-        objects.remove(object);
+        removeQueue.add(object);
     }
 
     public void applyTransformations(Matrix4d model) {
-        GameUtils.applyTransforms(new Matrix4d(projectionMatrix).mul(model));
+        Astrodx.applyTransforms(new Matrix4d(projectionMatrix).mul(model));
     }
 
      public void setViewport(Viewport viewport) {
@@ -213,5 +227,13 @@ public class AEWindow {
 
     public void setMouseMoveCallback(GLFWMouseButtonCallback callback) {
         GLFW.glfwSetMouseButtonCallback(window, callback);
+    }
+
+    public void pushBack(GameObject object) {
+        int loc = objects.indexOf(object);
+
+        if (loc <= 0) return;
+
+        Collections.swap(objects, loc, loc - 1);
     }
 }

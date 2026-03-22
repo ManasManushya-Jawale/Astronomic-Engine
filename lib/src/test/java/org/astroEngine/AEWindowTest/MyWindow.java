@@ -9,7 +9,7 @@ import org.astroEngine.Primitives.Objects.ImageObject;
 import org.astroEngine.Viewports.ScaleViewport;
 import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.graphics.ShaderSprite;
-import org.astroEngine.util.FileUtils;
+import org.astroEngine.util.Files;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
@@ -47,8 +47,8 @@ public class MyWindow extends AEWindow {
         setViewport(viewport);
 
         shaderObj = (DrawableObject) new GameObjectBuilder(new DrawableObject(new ShaderSprite(
-                FileUtils.readFile(FileUtils.internal("/shaders/pulsing/Vertex.glsl")),
-                FileUtils.readFile(FileUtils.internal("/shaders/pulsing/Frag.glsl")),
+                Files.readFile(Files.internal("/shaders/pulsing/Vertex.glsl")),
+                Files.readFile(Files.internal("/shaders/pulsing/Frag.glsl")),
                 Arrays.asList(
                         -50f, -50f, 0f,
                         50f, -50f, 0f,
@@ -66,7 +66,7 @@ public class MyWindow extends AEWindow {
                 .build();
         addObject(shaderObj);
 
-        car = new GameObjectBuilder(new ImageObject(FileUtils.internal("/cars/HayaBabu.png"), true))
+        car = new GameObjectBuilder(new ImageObject(Files.internal("/cars/HayaBabu.png"), true))
                 .setTranslate(new Vector3d(400, 300, 0)) //translation
                 .setScale(new Vector3d(6)) // scaling factor
                 .build(); // finalizes the builder to give the Game Object

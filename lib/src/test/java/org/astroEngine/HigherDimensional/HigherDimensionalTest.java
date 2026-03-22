@@ -12,7 +12,7 @@ import org.astroEngine.graphics.geometry.Sphere;
 import org.astroEngine.shapes.GameObject;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.AEWindow;
-import org.astroEngine.util.FileUtils;
+import org.astroEngine.util.Files;
 import org.joml.*;
 
 import static java.awt.Color.*;
@@ -108,21 +108,27 @@ public class HigherDimensionalTest extends AEWindow {
                 .addDrawable(new Cube(4, 4, 4))
                 .build();
 
-        canvas = new ImGUIObject("Canvas", () -> {
+        canvas = new ImGUIObject(() -> {
+            ImGui.begin("Canvas");
             ImGui.text("Hello World!");
             if (ImGui.button("Manas", 175, 125) && !objects.contains(cube)) {
                 addObject(cube);
             }
+            if (ImGui.beginMenu("My Menu")) {
+                ImGui.text("My Text");
+                ImGui.endMenu();
+            }
+            ImGui.end();
         });
 
 
         // ---------- myObject ----------
         myObject = new DrawableObject(new Sphere(1, 20, 20));
         ((ShaderSprite) myObject.getComponent(ShapeComp.class).getShape()).setVertexShaderSource(
-                FileUtils.readFile(FileUtils.internal("/shaders/Colors/Saturated/Saturated.vert"))
+                Files.readFile(Files.internal("/shaders/Colors/Saturated/Saturated.vert"))
         );
         ((ShaderSprite) myObject.getComponent(ShapeComp.class).getShape()).setFragmentShaderSource(
-                FileUtils.readFile(FileUtils.internal("/shaders/Colors/Saturated/Saturated.frag"))
+                Files.readFile(Files.internal("/shaders/Colors/Saturated/Saturated.frag"))
         );
         myObject.getTransformComponent().setScale(new Vector3d(1, -1, 1));
 
@@ -175,6 +181,9 @@ public class HigherDimensionalTest extends AEWindow {
         if (keyPressed(GLFW_KEY_SPACE)) camera.position.fma(delta * speed, new Vector3d(0, -1, 0));
         if (keyPressed(GLFW_KEY_LEFT_SHIFT)) camera.position.fma(delta * speed, new Vector3d(0, 1, 0));
 
+        if (objects.contains(cube)) {
+            pushBack(cube);
+        }
     }
 
     float speed = 20;

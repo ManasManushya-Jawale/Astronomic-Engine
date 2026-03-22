@@ -3,7 +3,7 @@ package org.astroEngine.graphics;
 import org.joml.Matrix4d;
 import org.joml.Vector2d;
 
-import org.astroEngine.util.GameUtils;
+import org.astroEngine.util.Astrodx;
 import org.astroEngine.util.AEMath;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -23,9 +23,9 @@ public class Polygon2d extends Shape {
     @Override
     public void draw(Matrix4d transform) {
 
-        GameUtils.clearState();
-        GameUtils.applyColor(this.color);
-        GameUtils.applyTransforms(transform);
+        Astrodx.clearState();
+        Astrodx.applyColor(this.color);
+        Astrodx.applyTransforms(transform);
         glBegin(GL_POLYGON);
         for (Vector2d point : points) {
             glVertex2d(point.x, point.y);
