@@ -4,8 +4,9 @@ import imgui.ImGui;
 import imgui.type.ImFloat;
 import org.astroEngine.AEWindow;
 import org.astroEngine.Camera.OrthographicCamera;
-import org.astroEngine.Primitives.GUI.ImGUIObject;
+import org.astroEngine.GUI.ImGUIObject;
 import org.astroEngine.Primitives.Objects.DrawableObject;
+import org.astroEngine.Viewports.BoxViewport;
 import org.astroEngine.Viewports.Viewport;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.graphics.Shape;
@@ -30,7 +31,7 @@ public class Main extends AEWindow {
     public OrthographicCamera camera;
 
     public float s1 = 100, s2 = 100/50f;
-    public float rs1 = 90;
+    public float rs1 = 90, rs2 = 90, rs3 = 90;
 
     public ImGUIObject canvas;
 
@@ -43,21 +44,7 @@ public class Main extends AEWindow {
         camera =new OrthographicCamera(this, 0, 800, 800, 0, -1, 1);
         addObject(camera);
 
-        setViewport(new Viewport(camera){
-            @Override
-            public void apply(long window, int w, int h) {
-                super.apply(window, w, h);
-
-                int min = Math.min(w, h);
-                int size = Math.min(w, h);
-                int x = (w - size) / 2;
-                int y = (h - size) / 2;
-
-                GL11.glViewport(x, y, min, min);
-                camera.setOrtho(0, min, min, 0, -1, 1);
-
-            }
-        });
+        setViewport(new BoxViewport(camera));
 
         earthPoints = new ArrayList<>();
         moonPoints = new ArrayList<>();
@@ -112,6 +99,17 @@ public class Main extends AEWindow {
                 this.s2 = s2.get();
             }
 
+            ImFloat rs1 = new ImFloat(this.rs1), rs2 = new ImFloat(this.rs2), rs3 = new ImFloat(this.rs3);
+            if (ImGui.inputFloat("Earth's rotation speed:", rs1)) {
+                this.rs1 = rs1.get();
+            }
+            if (ImGui.inputFloat("Moon's rotation speed:", rs2)) {
+                this.rs2 = rs2.get();
+            }
+            if (ImGui.inputFloat("Sun's rotation speed:", rs3)) {
+                this.rs3 = rs3.get();
+            }
+
             if (ImGui.button("Reset position")) {
                 t1 = 0;
                 t2 = 0;
@@ -145,14 +143,16 @@ public class Main extends AEWindow {
 
         super.loop(fps);
 
+        float delta = ((float) (1/fps));
+
         if (objects.contains(moon)) {
             earthPos = new Vector3d(Math.cos(t1) * r1, Math.sin(t1) * r1, 0);
             earthPos.add(400, 400, 0);
             earth.getTransform().setTranslation(earthPos.x, earthPos.y, earthPos.z);
 
-            earth.getTransform().rotateZ(Math.toRadians(1 / fps * rs1));
-            moon.getTransform().rotateZ(Math.toRadians(1 / fps * rs1));
-            sun.getTransform().rotateZ(Math.toRadians(1 / fps * rs1));
+            earth.getTransform().rotateZ(Math.toRadians(delta * rs1));
+            moon.getTransform().rotateZ(Math.toRadians(delta * rs2));
+            sun.getTransform().rotateZ(Math.toRadians(delta * rs3));
 
             moonPos = new Vector3d(Math.cos(t2) * r2, Math.sin(t2) * r2, 0);
             moonPos.add(earthPos);
@@ -161,8 +161,8 @@ public class Main extends AEWindow {
             earthPoints.add(earthPos);
             moonPoints.add(moonPos);
 
-            t1 += Math.toRadians((1 / fps) * s1);
-            t2 += Math.toRadians((1 / fps) * s2);
+            t1 += Math.toRadians((delta) * s1);
+            t2 += Math.toRadians((delta) * s2);
         }
     }
 

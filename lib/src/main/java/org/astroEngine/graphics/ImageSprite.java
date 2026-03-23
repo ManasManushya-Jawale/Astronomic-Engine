@@ -3,14 +3,16 @@ package org.astroEngine.graphics;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.astroEngine.records.Rectangle;
 import org.joml.Matrix4d;
+import org.joml.Vector3d;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
@@ -25,6 +27,8 @@ public class ImageSprite extends Shape {
     private int textureId;
     private boolean loaded;
     private boolean pixelPerfect;
+
+    private Vector3d pos;
 
     // --- Constructors ---
     public ImageSprite(String filepath) {
@@ -135,6 +139,8 @@ public class ImageSprite extends Shape {
 
     @Override
     public void draw(Matrix4d transform) {
+        transform.getTranslation(pos);
+
         Astrodx.applyColor(color);
         loadTextureIfNeeded();
         if (textureId == 0)
@@ -191,5 +197,9 @@ public class ImageSprite extends Shape {
 
     public void setImage(ByteBuffer buffer) {
         this.imageBuffer = buffer;
+    }
+
+    public org.astroEngine.records.Rectangle getBounds() {
+        return new Rectangle((int) pos.x, (int) pos.y, imgWidth, imgHeight);
     }
 }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import org.astroEngine.Primitives.Objects.DrawableObject;
+import org.astroEngine.graphics.ImageSprite;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
 
@@ -150,6 +152,10 @@ public class Astrodx {
         }
 
         return null;
+    }
+
+    public boolean collides(ImageSprite obj1, ImageSprite obj2) {
+        return obj1.getBounds().intersects(obj2.getBounds());
     }
 
 }

@@ -1,4 +1,4 @@
-package org.astroEngine.Primitives.GUI;
+package org.astroEngine.GUI;
 
 import imgui.ImGuiIO;
 import imgui.gl3.ImGuiImplGl3;
@@ -41,6 +41,7 @@ public class ImGUIObject extends GameObject {
 
         imGuiGlfw.init(getParent().window, instantCallback);
         imGuiGl3.init(glslVersion);
+
     }
 
     public void newFrame() {
@@ -51,5 +52,17 @@ public class ImGUIObject extends GameObject {
     public void render() {
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
+    }
+
+    public ImGuiImplGlfw getImGuiGlfw() {
+        return imGuiGlfw;
+    }
+
+    public ImGuiImplGl3 getImGuiGl3() {
+        return imGuiGl3;
+    }
+
+    public ImGuiIO getIo() {
+        return io;
     }
 }

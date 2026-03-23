@@ -2,6 +2,7 @@ package org.astroEngine.graphics;
 
 import org.astroEngine.events.ShaderProgramListener;
 import org.astroEngine.records.Shader;
+import org.astroEngine.util.VertexInfo;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
 
@@ -23,8 +24,6 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL40.glUniformMatrix4dv;
-
-import static org.astroEngine.util.ShaderUtils.VertexInfo;
 
 public class ShaderSprite extends Shape {
 

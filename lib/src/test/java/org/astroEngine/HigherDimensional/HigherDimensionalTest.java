@@ -2,7 +2,7 @@ package org.astroEngine.HigherDimensional;
 
 import imgui.ImGui;
 import org.astroEngine.Camera.PerspectiveCamera;
-import org.astroEngine.Primitives.GUI.ImGUIObject;
+import org.astroEngine.GUI.ImGUIObject;
 import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Viewports.Viewport;
 import org.astroEngine.comp.ShapeComp;
@@ -55,7 +55,7 @@ public class HigherDimensionalTest extends AEWindow {
             public void apply(long window, int w, int h) {
                 glViewport(0, 0, w, h);
 
-                camera.perspective((float) Math.toRadians(45), ((float) w / h), 0.1f, 100);
+                ((PerspectiveCamera) camera).perspective((float) Math.toRadians(45), ((float) w / h), 0.1f, 100);
 
                 winSize.x = (float) w;
                 winSize.y = (float) h;
