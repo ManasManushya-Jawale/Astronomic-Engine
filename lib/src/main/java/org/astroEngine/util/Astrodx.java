@@ -141,7 +141,6 @@ public class Astrodx {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                ;
             });
             return images;
 
