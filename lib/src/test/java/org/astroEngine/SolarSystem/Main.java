@@ -108,7 +108,6 @@ public class Main extends AEWindow {
             if (input("Sun's r speed:", rs3)) {
                 this.rs3 = rs3.get();
             }
-
             if (ImGui.button("Reset position")) {
                 t1 = 0;
                 t2 = 0;
