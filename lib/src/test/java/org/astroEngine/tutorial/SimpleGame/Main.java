@@ -19,7 +19,6 @@ import org.astroEngine.util.AEMath;
 import org.astroEngine.util.Files;
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
-
 import java.awt.*;
 import java.util.ArrayList;
 
