@@ -112,7 +112,6 @@ public class Main extends AEWindow {
                 t1 = 0;
                 t2 = 0;
             }
-
             if (ImGui.button("Reset Points")) {
                 earthPoints.clear();
                 moonPoints.clear();
