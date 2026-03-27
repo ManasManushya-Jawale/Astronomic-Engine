@@ -1,13 +1,14 @@
 package org.astroEngine.graphics.geometry;
 
-import org.astroEngine.graphics.ShaderSprite;
+import org.astroEngine.graphics.shaders.VertexShader;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
-public class Sphere extends ShaderSprite {
+public class Sphere extends VertexShader {
     public Sphere(int r, int xCuts, int yCuts) {
         super(DEFAULT_SHADER, generateSphere(r, xCuts, yCuts), GL11.GL_TRIANGLES);
+        depthBased = true;
     }
 
     private static ArrayList<Float> generateSphere(float radius, int stacks, int sectors) {

@@ -2,6 +2,7 @@ package org.astroEngine.Viewports;
 
 import org.astroEngine.Camera.Camera;
 import org.astroEngine.Camera.OrthographicCamera;
+import org.astroEngine.Camera.PerspectiveCamera;
 import org.lwjgl.opengl.GL11;
 
 public class BoxViewport extends Viewport {
@@ -23,6 +24,12 @@ public class BoxViewport extends Viewport {
         GL11.glViewport(x, y, min, min);
         if (camera instanceof OrthographicCamera) {
             ((OrthographicCamera) camera).setOrtho(0, min, min, 0, -1, 1);
+        }
+        else if (camera instanceof PerspectiveCamera) {
+            ((PerspectiveCamera) camera).perspective(((PerspectiveCamera) camera).getFOV(),
+                    ((float) (w / h)),
+                    ((PerspectiveCamera) camera).getNear(),
+                    ((PerspectiveCamera) camera).getFar());
         }
     }
 }

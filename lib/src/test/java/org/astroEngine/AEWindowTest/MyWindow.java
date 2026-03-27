@@ -8,7 +8,8 @@ import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Primitives.Objects.ImageObject;
 import org.astroEngine.Viewports.ScaleViewport;
 import org.astroEngine.comp.ShapeComp;
-import org.astroEngine.graphics.ShaderSprite;
+import org.astroEngine.events.Shaders.ShaderProgramAdapter;
+import org.astroEngine.graphics.shaders.VertexShader;
 import org.astroEngine.util.Files;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
@@ -18,6 +19,7 @@ import org.astroEngine.shapes.GameObject;
 import org.astroEngine.graphics.Graphics2DSprite;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.AEWindow;
+import org.lwjgl.opengl.GL20;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -32,7 +34,7 @@ public class MyWindow extends AEWindow {
     public OrthographicCamera camera;
     public ScaleViewport viewport;
 
-    public float speed = 3/2f;
+    public float speed = 3 / 2f;
     public float steer = 1;
 
     public float v = 0;
@@ -46,7 +48,7 @@ public class MyWindow extends AEWindow {
         viewport = new ScaleViewport(camera);
         setViewport(viewport);
 
-        shaderObj = (DrawableObject) new GameObjectBuilder(new DrawableObject(new ShaderSprite(
+        shaderObj = (DrawableObject) new GameObjectBuilder(new DrawableObject(new VertexShader(
                 Files.readFile(Files.internal("/shaders/pulsing/Vertex.glsl")),
                 Files.readFile(Files.internal("/shaders/pulsing/Frag.glsl")),
                 Arrays.asList(
@@ -55,11 +57,14 @@ public class MyWindow extends AEWindow {
                         50f, 50f, 0f,
                         -50f, 50f, 0f
                 )
-        ){{
-            setShaderProgramListener(shaderProgram -> {
-                glUniform1f(glGetUniformLocation(shaderProgram, "time"), v);
-                glUniform1f(glGetUniformLocation(shaderProgram, "u_scale"), 10);
-                return shaderProgram;
+        ) {{
+            setShaderProgramListener(new ShaderProgramAdapter() {
+                @Override
+                public int applyParams(int shaderProgram) {
+                    glUniform1f(GL20.glGetUniformLocation(shaderProgram, "time"), v);
+                    glUniform1f(GL20.glGetUniformLocation(shaderProgram, "u_scale"), 10);
+                    return shaderProgram;
+                }
             });
         }}))
                 .setTranslate(new Vector3d(0, 0, 0)) //translation
@@ -122,14 +127,14 @@ public class MyWindow extends AEWindow {
 
         camera.getProjection().rotateAround(new Quaterniond().rotateZ(dR.z), newPos.x, newPos.y, newPos.z);
 
-        v+= (float) (1f/fps);
+        v += (float) (1f / fps);
     }
 
     @Override
     public void loopSetup() {
         super.loopSetup();
         glDisable(GL_DEPTH_TEST);
-        ((ShaderSprite) shaderObj.getComponent(ShapeComp.class).getShape()).compile();
+        ((VertexShader) shaderObj.getComponent(ShapeComp.class).getShape()).compile();
     }
 
     public static void main(String[] arg) throws Exception {

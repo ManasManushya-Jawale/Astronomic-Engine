@@ -1,6 +1,6 @@
 package org.astroEngine.util;
 
-import org.astroEngine.graphics.ShaderSprite;
+import org.astroEngine.graphics.shaders.VertexShader;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -31,10 +31,10 @@ public class Files {
         }
     }
 
-    public static ShaderSprite getShaderSprite(File frag, File vert, List<Float> points) {
+    public static VertexShader getShaderSprite(File frag, File vert, List<Float> points) {
         String fragStr = readFile(frag);
         String vertStr = readFile(vert);
-        return new ShaderSprite(
+        return new VertexShader(
                 fragStr, vertStr, points
         );
     }

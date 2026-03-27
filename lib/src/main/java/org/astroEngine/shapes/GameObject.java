@@ -13,10 +13,27 @@ public class GameObject {
     ArrayList<Component> components;
     public Transform transform;
     private AEWindow parent;
+    private int layer = 1;
 
     public GameObject() {
         this.components = new ArrayList<>();
         addTransform();
+    }
+    @Override
+    public GameObject clone() {
+        try {
+            GameObject copy = (GameObject) super.clone();
+
+            copy.transform = this.getTransformComponent();
+            copy.components = this.getComponents();
+            copy.layer = this.layer;
+            copy.parent = this.parent;
+
+            return copy;
+
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ArrayList<Component> getComponents() {
@@ -75,5 +92,17 @@ public class GameObject {
 
     public Matrix4d getTransform() {
         return getTransformComponent().transform;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public int getLayerOrder() {
+        return -layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
     }
 }

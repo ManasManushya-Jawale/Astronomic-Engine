@@ -1,6 +1,8 @@
-package org.astroEngine.graphics;
+package org.astroEngine.graphics.shaders;
 
-import org.astroEngine.events.ShaderProgramListener;
+import org.astroEngine.events.Shaders.ShaderProgramAdapter;
+import org.astroEngine.events.Shaders.ShaderProgramListener;
+import org.astroEngine.graphics.Shape;
 import org.astroEngine.records.Shader;
 import org.astroEngine.util.VertexInfo;
 import org.joml.Matrix4d;
@@ -11,7 +13,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -25,7 +26,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL40.glUniformMatrix4dv;
 
-public class ShaderSprite extends Shape {
+public class VertexShader extends Shape {
 
     int vertexShader;
     int fragmentShader;
@@ -37,13 +38,13 @@ public class ShaderSprite extends Shape {
     private int transformLoc;
     VertexInfo info;
 
-    private List<Float> vertices;
+    private List<Float> vertices = new ArrayList<>();
 
     public int SHAPE_TYPE;
 
     private float[] verticesArr;
 
-    public static final ShaderSprite DEFAULT_SHADER_SPRITE = new ShaderSprite(
+    public static final VertexShader DEFAULT_SHADER_SPRITE = new VertexShader(
             """
                     #version 330 core
                     
@@ -97,11 +98,9 @@ public class ShaderSprite extends Shape {
                     """
     );
 
-    private ShaderProgramListener shaderProgramListener = i -> {
-        return i;
-    };
+    private ShaderProgramListener shaderProgramListener = new ShaderProgramAdapter();
 
-    public ShaderSprite(ShaderSprite sprite) {
+    public VertexShader(VertexShader sprite) {
         super(Color.WHITE);
 
         String vertexShaderSource = sprite.vertexShaderSource;
@@ -124,7 +123,7 @@ public class ShaderSprite extends Shape {
         }
     }
 
-    public ShaderSprite(Shader shader, List<Float> vertices, int type) {
+    public VertexShader(Shader shader, List<Float> vertices, int type) {
         super(Color.WHITE);
 
         String vertexShaderSource = shader.vert();
@@ -138,7 +137,7 @@ public class ShaderSprite extends Shape {
         setVertices(vertices);
     }
 
-    public ShaderSprite(String vertexShader, String fragmentShader, List<Float> vertices) {
+    public VertexShader(String vertexShader, String fragmentShader, List<Float> vertices) {
         super(Color.WHITE);
 
         this.vertexShaderSource = vertexShader;
@@ -150,7 +149,7 @@ public class ShaderSprite extends Shape {
         setVertices(vertices);
     }
 
-    public ShaderSprite(String vertexShader, String fragmentShader) {
+    public VertexShader(String vertexShader, String fragmentShader) {
         super(Color.WHITE);
 
         this.vertexShaderSource = vertexShader;
@@ -158,11 +157,10 @@ public class ShaderSprite extends Shape {
 
         this.SHAPE_TYPE = GL_TRIANGLES;
 
-        this.vertices = new ArrayList<>();
         this.verticesArr = new float[3];
     }
 
-    public ShaderSprite(int SHAPE_TYPE, List<Float> vertices, String vertexShaderSource, String fragmentShaderSource) {
+    public VertexShader(int SHAPE_TYPE, List<Float> vertices, String vertexShaderSource, String fragmentShaderSource) {
         super(Color.WHITE);
         this.SHAPE_TYPE = SHAPE_TYPE;
         this.vertices = vertices;
@@ -179,6 +177,7 @@ public class ShaderSprite extends Shape {
 
     @Override
     public void draw(Matrix4d transform) {
+        shaderProgramListener.preDraw();
 
         int VAO = info.VAO();
         int len = info.len();
@@ -194,8 +193,7 @@ public class ShaderSprite extends Shape {
         glUniformMatrix4fv(transformLoc, false, buffer);
         glDrawArrays(SHAPE_TYPE, 0, len);
 
-        // Reset shaders to 0 (default)
-        glUseProgram(0);
+        shaderProgramListener.postDraw();
     }
 
     public void applyShader() {
@@ -211,21 +209,23 @@ public class ShaderSprite extends Shape {
         }
     }
 
-    private VertexInfo createVertexAttr() {
+    public VertexInfo createVertexAttr() {
         int len = vertices.size() / 3;
 
-        int VBO = glGenBuffers();
+        int vVBO = glGenBuffers();
 
         int VAO = glGenVertexArrays();
 
         glBindVertexArray(VAO);
 // 2. copy our vertices array in a buffer for OpenGL to use
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, vVBO);
         glBufferData(GL_ARRAY_BUFFER, verticesArr, GL_STATIC_DRAW);
 
 // 3. then set our vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
+
+        shaderProgramListener.afterCompile(shaderProgram);
 
         return (info = new VertexInfo(VAO, len));
     }
@@ -251,6 +251,7 @@ public class ShaderSprite extends Shape {
         glAttachShader(shaderProgram, fragmentShader);
         glLinkProgram(shaderProgram);
         glValidateProgram(shaderProgram); // Validating if there are any errors
+        glUseProgram(shaderProgram);
 
         transformLoc = glGetUniformLocation(shaderProgram, "transform");
 
@@ -263,6 +264,9 @@ public class ShaderSprite extends Shape {
         if (compileStatus == GL_FALSE) {
             System.err.println(glGetShaderInfoLog(fragmentShader));
         }
+        shaderProgramListener.onCompile(shaderProgram);
+
+        glUseProgram(0);
 
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);

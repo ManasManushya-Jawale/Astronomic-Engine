@@ -5,7 +5,7 @@ import org.astroEngine.graphics.Shape;
 
 public class ShapeComp extends Component {
     Shape shape;
-    
+
     public ShapeComp(GameObject parent, Shape shape) {
         this.shape = shape;
     }

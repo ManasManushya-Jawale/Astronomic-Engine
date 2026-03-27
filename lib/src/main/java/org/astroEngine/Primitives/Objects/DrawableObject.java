@@ -11,6 +11,19 @@ public class DrawableObject extends GameObject {
         draw = addDrawable(shape);
     }
 
+    @Override
+    public DrawableObject clone() {
+        DrawableObject copy = new DrawableObject(this.getShape().getShape());
+
+        copy.transform = this.getTransformComponent();
+        copy.setTransformComponent(transform);
+        copy.setParent(copy.getParent());
+        copy.getComponents().addAll(this.getComponents());
+
+        return copy;
+
+    }
+
     public ShapeComp getDraw() {
         return draw;
     }

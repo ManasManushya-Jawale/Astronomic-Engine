@@ -7,7 +7,6 @@ import org.astroEngine.Camera.OrthographicCamera;
 import org.astroEngine.GUI.ImGUIObject;
 import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Viewports.BoxViewport;
-import org.astroEngine.Viewports.Viewport;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.graphics.Shape;
 import org.astroEngine.shapes.GameObject;
@@ -91,22 +90,22 @@ public class Main extends AEWindow {
 
             ImFloat s1 = new ImFloat(this.s1), s2 = new ImFloat(this.s2);
 
-            if (ImGui.inputFloat("Earth Speed", s1)) {
+            if (input("Earth Speed", s1)) {
                 this.s1 = s1.get();
             }
 
-            if (ImGui.inputFloat("Moon Speed", s2)) {
+            if (input("Moon Speed", s2)) {
                 this.s2 = s2.get();
             }
 
             ImFloat rs1 = new ImFloat(this.rs1), rs2 = new ImFloat(this.rs2), rs3 = new ImFloat(this.rs3);
-            if (ImGui.inputFloat("Earth's rotation speed:", rs1)) {
+            if (input("Earth's r speed:", rs1)) {
                 this.rs1 = rs1.get();
             }
-            if (ImGui.inputFloat("Moon's rotation speed:", rs2)) {
+            if (input("Moon's r speed:", rs2)) {
                 this.rs2 = rs2.get();
             }
-            if (ImGui.inputFloat("Sun's rotation speed:", rs3)) {
+            if (input("Sun's r speed:", rs3)) {
                 this.rs3 = rs3.get();
             }
 
@@ -168,5 +167,11 @@ public class Main extends AEWindow {
 
     public static void main(String[] args) {
         new Main().initialStart();
+    }
+
+    public boolean input(String str, ImFloat value) {
+        ImGui.text(str);
+        ImGui.sameLine(150);
+        return ImGui.inputFloat("##" + str, value);
     }
 }

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.graphics.ImageSprite;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;

@@ -5,15 +5,20 @@ import org.astroEngine.Camera.PerspectiveCamera;
 import org.astroEngine.GUI.ImGUIObject;
 import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Viewports.Viewport;
+import org.astroEngine.comp.Component;
 import org.astroEngine.comp.ShapeComp;
-import org.astroEngine.graphics.ShaderSprite;
+import org.astroEngine.events.Shaders.ShaderProgramAdapter;
+import org.astroEngine.events.Shaders.TextureProgramListener;
+import org.astroEngine.graphics.shaders.VertexShader;
 import org.astroEngine.graphics.geometry.Cube;
 import org.astroEngine.graphics.geometry.Sphere;
 import org.astroEngine.shapes.GameObject;
+import org.astroEngine.util.AEMath;
 import org.astroEngine.util.Builder.GameObjectBuilder;
 import org.astroEngine.AEWindow;
 import org.astroEngine.util.Files;
 import org.joml.*;
+import org.lwjgl.opengl.GL30;
 
 import static java.awt.Color.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -24,8 +29,8 @@ import java.lang.Math;
 
 public class HigherDimensionalTest extends AEWindow {
 
-    private final GameObject myObject;
-    private final GameObject cube;
+    private final DrawableObject myObject;
+    private final DrawableObject cube;
 
     private final Vector2d winSize = new Vector2d();
     private final Vector2d lastMouse = new Vector2d();
@@ -41,6 +46,8 @@ public class HigherDimensionalTest extends AEWindow {
     boolean leftMouse = false;
 
     ImGUIObject canvas;
+
+    float time;
 
     public HigherDimensionalTest() {
         super(new Dimension(800, 600), "Higher Dimensional");
@@ -68,7 +75,10 @@ public class HigherDimensionalTest extends AEWindow {
         });
 
         glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
-            leftMouse = button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS;
+            if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+                leftMouse = action == GLFW_PRESS;
+                if (leftMouse) firstMouse = true; // reset on click
+            }
         });
         glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
             if (!leftMouse) return;
@@ -103,38 +113,108 @@ public class HigherDimensionalTest extends AEWindow {
             }
         });
 
-        cube = new GameObjectBuilder()
-                .setTranslate(new Vector3d(2, 2, 0))
-                .addDrawable(new Cube(4, 4, 4))
-                .build();
-
         canvas = new ImGUIObject(() -> {
             ImGui.begin("Canvas");
             ImGui.text("Hello World!");
-            if (ImGui.button("Manas", 175, 125) && !objects.contains(cube)) {
-                addObject(cube);
-            }
             if (ImGui.beginMenu("My Menu")) {
                 ImGui.text("My Text");
                 ImGui.endMenu();
             }
             ImGui.end();
         });
+        canvas.setLayer(0);
 
+        time = 0;
+
+        cube = new DrawableObject(new Cube(1, 1, 1));
+
+        ((VertexShader) cube.getShape().getShape()).setShaderProgramListener(new TextureProgramListener(
+                Files.internal("/image/Water.png").getAbsolutePath()
+        ) {{this.uv = new float[]{
+                // LEFT (0,1,2) (2,3,0)
+                0,0,  1,0,  1,1,
+                1,1,  0,1,  0,0,
+
+                // RIGHT (4,5,6) (6,7,4)
+                0,0,  1,0,  1,1,
+                1,1,  0,1,  0,0,
+
+                // BOTTOM (0,1,5) (0,4,5)
+                0,0,  1,0,  1,1,
+                0,0,  0,1,  1,1,
+
+                // TOP (2,3,7) (2,6,7)
+                0,0,  1,0,  1,1,
+                0,0,  0,1,  1,1,
+
+                // FRONT (1,2,6) (1,5,6)
+                0,0,  1,0,  1,1,
+                0,0,  0,1,  1,1,
+
+                // BACK (0,3,7) (0,4,7)
+                0,0,  1,0,  1,1,
+                0,0,  0,1,  1,1,
+        };
+        }});
+        ((VertexShader) cube.getShape().getShape()).setVertexShaderSource("""
+                    #version 330 core
+                    
+                    layout (location = 0) in vec3 aPos;
+                    layout (location = 1) in vec2 aTexCoord;
+                    
+                    out vec2 texCoord;
+                    
+                    uniform mat4 transform;
+                    
+                    void main() {
+                        texCoord = aTexCoord;
+                        gl_Position = transform * vec4(aPos, 1.0);
+                    }
+                    """);
+        ;
+        ((VertexShader) cube.getShape().getShape()).setFragmentShaderSource("""
+                    #version 330 core
+                    
+                    in vec2 texCoord;
+                    out vec4 FragColor;
+                    
+                    uniform sampler2D tex;
+                    
+                    void main() {
+                        FragColor = texture(tex, texCoord);
+                    }""");
+        cube.getTransform().translate(0, 0, 2);
+        cube.setLayer(2);
+        addObject(cube);
 
         // ---------- myObject ----------
         myObject = new DrawableObject(new Sphere(1, 20, 20));
-        ((ShaderSprite) myObject.getComponent(ShapeComp.class).getShape()).setVertexShaderSource(
-                Files.readFile(Files.internal("/shaders/Colors/Saturated/Saturated.vert"))
-        );
-        ((ShaderSprite) myObject.getComponent(ShapeComp.class).getShape()).setFragmentShaderSource(
-                Files.readFile(Files.internal("/shaders/Colors/Saturated/Saturated.frag"))
-        );
+        ((VertexShader) myObject.getShape().getShape()).setShaderProgramListener(
+        new ShaderProgramAdapter() {
+
+            @Override
+            public int applyParams(int s) {
+                int tLoc = GL30.glGetUniformLocation(s, "time");
+                GL30.glUniform1f(tLoc, time);
+                return s;
+            }
+        });
+        setShader(myObject, "/shaders/Gradient/Gradient.frag", "/shaders/Gradient/Gradient.vert");
+
         myObject.getTransformComponent().setScale(new Vector3d(1, -1, 1));
 
         addObject(myObject);
 
         addObject(canvas);
+    }
+
+    public void setShader(GameObject object, String frag, String vert) {
+        ((VertexShader) object.getComponent(ShapeComp.class).getShape()).setVertexShaderSource(
+                Files.readFile(Files.internal(vert))
+        );
+        ((VertexShader) object.getComponent(ShapeComp.class).getShape()).setFragmentShaderSource(
+                Files.readFile(Files.internal(frag))
+        );
     }
 
     @Override
@@ -156,8 +236,8 @@ public class HigherDimensionalTest extends AEWindow {
     public void loopSetup() {
         glEnable(GL_DEPTH_TEST);
 
-        ((ShaderSprite) myObject.getComponent(ShapeComp.class).getShape()).compile();
-        ((ShaderSprite) cube.getComponent(ShapeComp.class).getShape()).compile();
+        ((VertexShader) myObject.getComponent(ShapeComp.class).getShape()).compile();
+        ((VertexShader) cube.getShape().getShape()).compile();
 
         viewport.apply(window, 800, 600);
 
@@ -181,9 +261,7 @@ public class HigherDimensionalTest extends AEWindow {
         if (keyPressed(GLFW_KEY_SPACE)) camera.position.fma(delta * speed, new Vector3d(0, -1, 0));
         if (keyPressed(GLFW_KEY_LEFT_SHIFT)) camera.position.fma(delta * speed, new Vector3d(0, 1, 0));
 
-        if (objects.contains(cube)) {
-            pushBack(cube);
-        }
+        time += delta;
     }
 
     float speed = 20;

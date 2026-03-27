@@ -28,7 +28,7 @@ public class ImageSprite extends Shape {
     private boolean loaded;
     private boolean pixelPerfect;
 
-    private Vector3d pos;
+    private Vector3d pos = new Vector3d();
 
     // --- Constructors ---
     public ImageSprite(String filepath) {

@@ -1,15 +1,8 @@
 package org.astroEngine;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 import org.astroEngine.Constants.vSyncState;
 import org.astroEngine.Viewports.Viewport;
@@ -24,6 +17,8 @@ import org.astroEngine.comp.Component;
 import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.comp.Transform;
 import org.astroEngine.shapes.GameObject;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * AEWindow is a window that does alot of things.
@@ -49,6 +44,9 @@ public class AEWindow {
     private boolean visible = true;
 
     private Matrix4d projectionMatrix;
+    private boolean depthTestEnabled = false;
+
+    private vSyncState vSync = vSyncState.ENABLE_IF_SUPPORTS;
 
     public vSyncState getVSync() {
         return vSync;
@@ -60,7 +58,6 @@ public class AEWindow {
         GLFW.glfwSwapInterval(vSync.getValue());
     }
 
-    private vSyncState vSync = vSyncState.ENABLE_IF_SUPPORTS;
 
     public AEWindow(Dimension size, String title) {
         this.size = size;
@@ -168,12 +165,17 @@ public class AEWindow {
 
     public void beforeDraw() {
         objects.addAll(addQueue);
-        for (GameObject remove : removeQueue) {
-            objects.remove(remove);
+        objects.removeAll(removeQueue);
+
+        if (!addQueue.isEmpty()) {
+            objects.sort(Comparator
+                    .comparingDouble(GameObject::getLayerOrder)
+            );
         }
 
         addQueue.clear();
         removeQueue.clear();
+
     }
 
     public void hideWindow() {
@@ -207,7 +209,6 @@ public class AEWindow {
     }
 
     public void removeObject(GameObject object) {
-        object.setParent(null);
         removeQueue.add(object);
     }
 

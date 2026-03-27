@@ -6,6 +6,7 @@ import org.joml.Matrix4d;
 
 public abstract class Shape implements Drawable {
     public Color color;
+    public boolean depthBased = false;
 
     public Shape(Color color) {
         this.color = color;

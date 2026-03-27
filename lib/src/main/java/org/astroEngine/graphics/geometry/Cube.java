@@ -1,44 +1,60 @@
 package org.astroEngine.graphics.geometry;
 
-import org.astroEngine.graphics.ShaderSprite;
-import org.joml.Matrix4d;
+import org.astroEngine.graphics.shaders.VertexShader;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
-public class Cube extends ShaderSprite {
+public class Cube extends VertexShader {
     float l, b, w;
 
-    float[] bound = new float[]{
-            -1, -1, -1,
-            -1, -1, 1,
-            -1, 1, 1,
-            -1, 1, -1,
-            1, -1, -1,
-            1, -1, 1,
-            1, 1, 1,
-            1, 1, -1
-    };
+    float[] bound;
 
     ArrayList<Float> result;
 
     public Cube(float l, float b, float w) {
         super(DEFAULT_SHADER_SPRITE);
 
-        SHAPE_TYPE = GL11.GL_QUADS;
+        SHAPE_TYPE = GL11.GL_TRIANGLES;
 
         this.l = l;
         this.b = b;
         this.w = w;
 
+        bound = new float[]{
+                -l, -b, -w,
+                -l, -b, w,
+                -l, b, w,
+                -l, b, -w,
+                 l,-b, -w,
+                 l,-b, w,
+                 l,b, w,
+                 l,b, -w
+        };
+
         result = new ArrayList<>();
 
-        addQuad(0,1,2,3); // left
-        addQuad(4,5,6,7); // right
-        addQuad(0,1,5,4); // bottom
-        addQuad(2,3,7,6); // top
-        addQuad(1,2,6,5); // front
-        addQuad(0,3,7,4); // back
+        addQuad(0,1,2); // left
+        addQuad(2, 3, 0);
+
+        addQuad(4,5,6); // right
+        addQuad(6, 7, 4);
+
+
+        addQuad(0,1,5); // bottom
+        addQuad(0, 4, 5);
+
+
+        addQuad(2,3,7); // top
+        addQuad(2,6,7);
+
+
+        addQuad(1,2,6); // front
+        addQuad(1,5,6);
+
+
+        addQuad(0,3,7); // back
+        addQuad(0,4,7);
 
         float[] resultArr = new float[result.size()];
         for (int i = 0; i < result.size(); i++) {
@@ -46,9 +62,11 @@ public class Cube extends ShaderSprite {
         }
 
         setVerticesArr(resultArr);
+
+        depthBased = true;
     }
 
-    private void addQuad(int a, int b, int c, int d) {
+    private void addQuad(int a, int b, int c) {
         result.add(bound[a * 3]);
         result.add(bound[a * 3 + 1]);
         result.add(bound[a * 3 + 2]);
@@ -61,9 +79,29 @@ public class Cube extends ShaderSprite {
         result.add(bound[c * 3 + 1]);
         result.add(bound[c * 3 + 2]);
 
-        result.add(bound[d * 3]);
-        result.add(bound[d * 3 + 1]);
-        result.add(bound[d * 3 + 2]);
     }
 
+    public float getW() {
+        return w;
+    }
+
+    public void setW(float w) {
+        this.w = w;
+    }
+
+    public float getB() {
+        return b;
+    }
+
+    public void setB(float b) {
+        this.b = b;
+    }
+
+    public float getL() {
+        return l;
+    }
+
+    public void setL(float l) {
+        this.l = l;
+    }
 }
