@@ -48,6 +48,7 @@ public class Model3d extends GameObject {
         System.out.println("materialN: " + materialN);
         PointerBuffer mat = scene.mMaterials();
 
+
         int matIndex = mesh.mMaterialIndex();
         AIMaterial material = AIMaterial.create(mat.get(matIndex));
         AIString matPath = AIString.calloc();
