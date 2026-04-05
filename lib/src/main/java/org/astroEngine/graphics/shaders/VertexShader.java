@@ -4,11 +4,13 @@ import org.astroEngine.events.Shaders.ShaderProgramAdapter;
 import org.astroEngine.events.Shaders.ShaderProgramListener;
 import org.astroEngine.graphics.Shape;
 import org.astroEngine.records.Shader;
+import org.astroEngine.util.Files;
 import org.astroEngine.util.VertexInfo;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.FloatBuffer;
@@ -175,6 +177,10 @@ public class VertexShader extends Shape {
 
     }
 
+    public VertexShader() {
+        super(Color.WHITE);
+    }
+
     @Override
     public void draw(Matrix4d transform) {
         shaderProgramListener.preDraw();
@@ -203,7 +209,8 @@ public class VertexShader extends Shape {
 
     public void compile() {
         try {
-            createShader(createVertexAttr());
+            VertexInfo info = createVertexAttr();
+            createShader(info);
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -278,6 +285,16 @@ public class VertexShader extends Shape {
 
     public void setFragmentShaderSource(String fragmentShaderSource) {
         this.fragmentShaderSource = fragmentShaderSource;
+    }
+
+    public void setSources(File vertex, File fragment) {
+        setVertexShaderSource(Files.readFile(vertex));
+        setFragmentShaderSource(Files.readFile(fragment));
+    }
+
+    public void setInternalSources(String vertex, String fragment) {
+        setVertexShaderSource(Files.readFile(Files.internal(vertex)));
+        setFragmentShaderSource(Files.readFile(Files.internal(fragment)));
     }
 
     public String getVertexShaderSource() {

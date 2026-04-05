@@ -20,8 +20,6 @@ public class PlainShader extends Shape {
 
     private int shaderProgram;
     private int VAO;
-    private int vertexCount;
-    private int transformLoc;
 
     private final String vertexSrc;
     private final String fragmentSrc;
@@ -34,7 +32,10 @@ public class PlainShader extends Shape {
         this.fragmentSrc = fragmentSrc;
     }
 
-    public void compile(float[] vertices) {
+    public void compile() {
+        float[] vertices = new float[]{
+
+        };
         // ===== VAO + VBO =====
         VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
@@ -50,8 +51,6 @@ public class PlainShader extends Shape {
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
-
-        vertexCount = vertices.length / 3;
 
         // ===== SHADER =====
         int vs = glCreateShader(GL_VERTEX_SHADER);
@@ -71,8 +70,6 @@ public class PlainShader extends Shape {
         glDeleteShader(vs);
         glDeleteShader(fs);
 
-        // cache uniform
-        transformLoc = glGetUniformLocation(shaderProgram, "transform");
     }
 
     @Override
@@ -83,7 +80,6 @@ public class PlainShader extends Shape {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         transform.get(buffer);
 
-        glUniformMatrix4fv(transformLoc, false, buffer);
         shaderProgramListener.applyParams(shaderProgram);
 
     }

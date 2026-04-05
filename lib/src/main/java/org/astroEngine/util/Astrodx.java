@@ -15,7 +15,13 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import org.astroEngine.AEWindow;
+import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.graphics.ImageSprite;
+import org.astroEngine.graphics.Shape;
+import org.astroEngine.graphics.shaders.VertexShader;
+import org.astroEngine.shapes.GameObject;
+import org.astroEngine.util.Builder.Shapes;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
 
@@ -28,8 +34,6 @@ public class Astrodx {
 
         glMatrixMode(GL_MODELVIEW);
         glLoadMatrixd(db);         // load FULL MVP here
-
-
     }
 
     // Clear both transformation and color state
@@ -154,5 +158,23 @@ public class Astrodx {
     public boolean collides(ImageSprite obj1, ImageSprite obj2) {
         return obj1.getBounds().intersects(obj2.getBounds());
     }
+
+    public static void compileAllShaders(GameObject ...objects) {
+        for (GameObject object : objects) {
+            if (object == null) continue;
+
+            ShapeComp shapeComp = object.getComponent(ShapeComp.class);
+            if (shapeComp == null) continue;
+
+            if (shapeComp.getShape() instanceof VertexShader shader) {
+                shader.compile();
+            }
+        }
+    }
+
+    public static void compileAllAvailableShaderObjects(AEWindow window) {
+        compileAllShaders(window.objects.toArray(new GameObject[0]));
+    }
+
 
 }

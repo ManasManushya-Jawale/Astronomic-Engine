@@ -35,4 +35,12 @@ public class RatioViewport extends Viewport {
             ((PerspectiveCamera) camera).setAspect(((float) (w / h)));
         }
     }
+
+    public float getTargetAspect() {
+        return targetAspect;
+    }
+
+    public void setTargetAspect(float targetAspect) {
+        this.targetAspect = targetAspect;
+    }
 }

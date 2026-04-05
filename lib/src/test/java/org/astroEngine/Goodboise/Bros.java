@@ -9,6 +9,8 @@ import org.astroEngine.util.Files;
 import org.astroEngine.util.Astrodx;
 import org.astroEngine.AEWindow;
 import org.joml.Vector3d;
+import org.junit.jupiter.api.Test;
+
 import java.awt.*;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -38,14 +40,17 @@ public class Bros extends AEWindow {
                 .addComponent(new ShapeComp(
                         new ImageSprite(Files.internal("/Manas.png"))))
                 .addComponent(new Animation(Astrodx.packTextureFromResource(
-                        Files.internal("/pack/testPack/pack.txt")), .25f){{
-                            start();
-                        }})
+                        Files.internal("/pack/testPack/pack.txt")), .25f) {
+                    {
+                        start();
+                    }
+                })
                 .build();
         objects.add(manas);
     }
 
-    public static void main(String[] args) {
+    @Test
+    void test() {
         new Bros().initialStart();
     }
 }

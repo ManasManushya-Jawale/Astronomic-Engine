@@ -3,6 +3,10 @@ package org.astroEngine.util.Builder;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import org.astroEngine.AEWindow;
+import org.astroEngine.Primitives.Objects.DrawableObject;
+import org.astroEngine.graphics.geometry.Cube;
+import org.astroEngine.shapes.GameObject;
 import org.joml.Math;
 import org.joml.Matrix3d;
 import org.joml.Vector2d;
@@ -60,4 +64,19 @@ public class Shapes {
         return buffer;
     }
 
+    public static DrawableObject cube(AEWindow parent, float l, float b, float w) {
+        DrawableObject obj = cube(l, b, w);
+        parent.addObject(obj);
+        return obj;
+    }
+
+
+    public static DrawableObject cube(float l, float b, float w) {
+        return new DrawableObject(new Cube(l, b, w));
+    }
+
+    public static void mesh(String objectPath, int args) {
+        GameObject result = new GameObject();
+
+    }
 }

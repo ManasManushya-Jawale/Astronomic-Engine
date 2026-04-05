@@ -34,27 +34,29 @@ public class Cube extends VertexShader {
 
         result = new ArrayList<>();
 
-        addQuad(0,1,2); // left
-        addQuad(2, 3, 0);
+// FRONT (facing +Z)
+        addQuad(1, 5, 6);
+        addQuad(1, 6, 2);
 
-        addQuad(4,5,6); // right
-        addQuad(6, 7, 4);
+// BACK (facing -Z)
+        addQuad(0, 3, 7);
+        addQuad(0, 7, 4);
 
+// LEFT (facing -X)
+        addQuad(0, 1, 2);
+        addQuad(0, 2, 3);
 
-        addQuad(0,1,5); // bottom
+// RIGHT (facing +X)
+        addQuad(4, 7, 6);
+        addQuad(4, 6, 5);
+
+// BOTTOM (facing -Y)
         addQuad(0, 4, 5);
+        addQuad(0, 5, 1);
 
-
-        addQuad(2,3,7); // top
-        addQuad(2,6,7);
-
-
-        addQuad(1,2,6); // front
-        addQuad(1,5,6);
-
-
-        addQuad(0,3,7); // back
-        addQuad(0,4,7);
+// TOP (facing +Y)
+        addQuad(3, 2, 6);
+        addQuad(3, 6, 7);
 
         float[] resultArr = new float[result.size()];
         for (int i = 0; i < result.size(); i++) {

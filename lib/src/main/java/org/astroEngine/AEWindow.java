@@ -135,7 +135,10 @@ public class AEWindow {
     /***
      This runs after the window is created and GL capabilities are created
      */
-    public void loopSetup() { }
+    public void loopSetup() {
+        objects.addAll(addQueue);
+        addQueue.clear();
+    }
 
     private void startDisplaying() {
         GLFW.glfwMakeContextCurrent(window);
@@ -181,11 +184,23 @@ public class AEWindow {
     public void hideWindow() {
         GLFW.glfwHideWindow(window);
         visible = false;
+
+        for (GameObject objects : objects) {
+            for (Component components : objects.getComponents()) {
+                components.windowHide();
+            }
+        }
     }
 
     public void showWindow() {
         GLFW.glfwShowWindow(window);
         visible = true;
+
+        for (GameObject objects : objects) {
+            for (Component components : objects.getComponents()) {
+                components.windowShow();
+            }
+        }
     }
 
     /**
@@ -193,6 +208,7 @@ public class AEWindow {
      * only removes the window from openGL's system
      */
     public void destroyWindow() {
+        dispose();
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwSetErrorCallback(null).free();
     }
@@ -236,5 +252,17 @@ public class AEWindow {
         if (loc <= 0) return;
 
         Collections.swap(objects, loc, loc - 1);
+    }
+
+    public void dispose() {
+        for (GameObject objects : objects) {
+            for (Component components : objects.getComponents()) {
+                components.dispose();
+            }
+        }
+    }
+
+    public void setPos(int x, int y) {
+        GLFW.glfwSetWindowPos(window, x, y);
     }
 }

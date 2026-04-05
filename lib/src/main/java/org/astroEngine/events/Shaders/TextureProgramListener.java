@@ -3,6 +3,7 @@ package org.astroEngine.events.Shaders;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -27,6 +28,8 @@ import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 
 public class TextureProgramListener extends ShaderProgramAdapter {
+    private int format = GL_RGBA;
+    private int internalFormat = GL_RGBA;
     private String filepath;
     private int texID;
     private int texLoc;
@@ -38,6 +41,20 @@ public class TextureProgramListener extends ShaderProgramAdapter {
     public TextureProgramListener(String filepath)
     {
         this.filepath = filepath;
+    }
+    public TextureProgramListener(int width, int height, ByteBuffer buf) {
+        generateTexture(width, height, buf);
+    }
+    public TextureProgramListener(int texID) {
+        this.texID = texID;
+    }
+
+    public TextureProgramListener(int width, int height, ByteBuffer buf, boolean isFont) {
+        if (isFont) {
+            this.internalFormat = GL_RED;
+            this.format = GL_RED;
+        }
+        generateTexture(width, height, buf);
     }
 
     public static void setTexture2DParameter(int param, int value) {
@@ -52,10 +69,12 @@ public class TextureProgramListener extends ShaderProgramAdapter {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         textureParams.run();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
-                GL_RGBA, GL_UNSIGNED_BYTE, buf);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0,
+                format, GL_UNSIGNED_BYTE, buf);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
+
+    public boolean flip = true;
 
     @Override
     public int onCompile(int shaderProgram) {
@@ -63,12 +82,12 @@ public class TextureProgramListener extends ShaderProgramAdapter {
         texLoc = glGetUniformLocation(shaderProgram, "tex");
         glUniform1i(texLoc, 0); // bind sampler to GL_TEXTURE0
 
-        try (MemoryStack stack = MemoryStack.stackPush()) {
+        if (filepath != null) try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            stbi_set_flip_vertically_on_load(true); // 👈 also important
+            stbi_set_flip_vertically_on_load(flip); // 👈 also important
 
             ByteBuffer buf = stbi_load(filepath, w, h, channels, 4);
             if (buf == null) {
