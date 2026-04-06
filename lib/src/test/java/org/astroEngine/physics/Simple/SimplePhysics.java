@@ -1,6 +1,5 @@
 package org.astroEngine.physics.Simple;
 
-import org.astroEngine.Primitives.Objects.PhysicsWorldObject;
 import org.astroEngine.comp.Component;
 import org.astroEngine.comp.PhysicsComponent;
 import org.astroEngine.comp.ShapeComp;
@@ -79,8 +78,6 @@ public class SimplePhysics extends AEWindow {
         });
 
         vertexes = new ArrayList<>();
-
-        addObject(new PhysicsWorldObject(new Vector3d(0, 10, 0)));
 
         addObject(new GameObject(){{
             getTransformComponent().getTransform().translate(new Vector3d(200,200,0));

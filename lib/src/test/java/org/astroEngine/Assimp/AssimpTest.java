@@ -125,10 +125,8 @@ public class AssimpTest extends AEWindow {
 
     cube = new Model3d(
         Files.internal("/objs/Me.obj").getAbsolutePath(),
-        aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
-            aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace
-            | aiProcess_LimitBoneWeights |
-            aiProcess_PreTransformVertices | aiProcess_FlipUVs | aiTextureType_DIFFUSE);
+            aiProcess_Triangulate | aiProcess_CalcTangentSpace |
+            aiProcess_PreTransformVertices | aiProcess_FlipUVs);
     cube.getTransform().translateLocal(0, 0, 5).scale(20);
     addObject(cube);
   }

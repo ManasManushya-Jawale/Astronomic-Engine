@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import org.astroEngine.AEWindow;
+import org.astroEngine.comp.Component;
 import org.astroEngine.comp.ShapeComp;
 import org.astroEngine.graphics.ImageSprite;
 import org.astroEngine.graphics.Shape;
@@ -163,11 +164,13 @@ public class Astrodx {
         for (GameObject object : objects) {
             if (object == null) continue;
 
-            ShapeComp shapeComp = object.getComponent(ShapeComp.class);
-            if (shapeComp == null) continue;
+            for (Component component : object.getComponents()) {
 
-            if (shapeComp.getShape() instanceof VertexShader shader) {
-                shader.compile();
+                if (component instanceof ShapeComp shapeComp) {
+                    if (shapeComp.getShape() instanceof VertexShader shader) {
+                        shader.compile();
+                    }
+                }
             }
         }
     }

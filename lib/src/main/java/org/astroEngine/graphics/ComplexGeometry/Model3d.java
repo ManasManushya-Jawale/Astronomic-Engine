@@ -31,23 +31,20 @@ public class Model3d extends GameObject {
         PointerBuffer aiMeshes = scene.mMeshes();
         for (int i = 0; i < meshes; i++) {
             System.out.println("Iteration 1: " + i);
-            load(scene, i);
+            AIMesh mesh = AIMesh.create(aiMeshes.get(i));
+            load(scene, mesh);
         }
     }
 
-    public void load(AIScene scene, int i) {
+    public void load(AIScene scene, AIMesh mesh) {
         ArrayList<Float> vertices = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
         ArrayList<Float> uvMap = new ArrayList<>();
         ArrayList<Float> resultUV = new ArrayList<>();
 
         String texturePath = "";
-        AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));
 
-        int materialN = scene.mNumMaterials();
-        System.out.println("materialN: " + materialN);
         PointerBuffer mat = scene.mMaterials();
-
 
         int matIndex = mesh.mMaterialIndex();
         AIMaterial material = AIMaterial.create(mat.get(matIndex));
@@ -147,6 +144,7 @@ public class Model3d extends GameObject {
         }};
 
         if (!texturePath.isEmpty()) {
+            System.out.println("Adding textuer " + texturePath);
             meshObj.
                     setShaderProgramListener(new TextureProgramListener(texturePath) {
                         {
@@ -158,6 +156,8 @@ public class Model3d extends GameObject {
                         }
                     });
         }
+        System.out.println(resultUV.size());
+        System.out.println("Adding obj " + meshObj);
         return meshObj;
     }
 }
