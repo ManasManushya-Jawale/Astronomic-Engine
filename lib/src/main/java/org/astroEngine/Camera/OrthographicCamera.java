@@ -48,6 +48,7 @@ public class OrthographicCamera extends Camera {
     projection.ortho(nearBounds.x, farBounds.x, farBounds.y, nearBounds.y, nearBounds.z, farBounds.z);
   }
 
+
   public void setOrtho(Vector3d nearBounds, Vector3d farBounds) {
     this.nearBounds = nearBounds;
     this.farBounds = farBounds;
