@@ -100,11 +100,12 @@ public class AEWindow {
         for (GameObject object : objects) {
             Transform transform;
             if ((transform = object.getComponent(Transform.class)) != null) {
-                ShapeComp draw;
-                if ((draw = object.getComponent(ShapeComp.class)) != null) {
-                    Matrix4d mvp = new Matrix4d(projectionMatrix)
-                            .mul(transform.getTransform());
-                    draw.getShape().draw(mvp);
+                for (Component component : object.getComponents()) {
+                    if (component instanceof ShapeComp shape) {
+                        Matrix4d mvp = new Matrix4d(projectionMatrix)
+                                .mul(transform.getTransform());
+                        shape.getShape().draw(mvp);
+                    }
                 }
             }
         }
