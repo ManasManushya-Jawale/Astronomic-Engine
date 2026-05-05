@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="180"
+   height="180"
+   viewBox="0 0 180 180"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   sodipodi:docname="AstroEngine.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="1.3972222"
+     inkscape:cx="157.45527"
+     inkscape:cy="96.262426"
+     inkscape:window-width="1366"
+     inkscape:window-height="714"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="2.1471173"
+       y="17.534791"
+       width="172.12724"
+       height="49.383698"
+       id="rect1" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g1">
+      <g
+         id="g3"
+         transform="translate(-0.52191496,28.456251)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.3333px;font-family:'Ac437 Acer VGA 8x8';-inkscape-font-specification:'Ac437 Acer VGA 8x8';writing-mode:lr-tb;direction:ltr;fill:#ffffff;fill-opacity:1"
+           x="14.41562"
+           y="61.192844"
+           id="text2"><tspan
+             sodipodi:role="line"
+             id="tspan2"
+             x="14.41562"
+             y="61.192844"
+             style="font-size:37.3333px;fill:#ffffff;fill-opacity:1">Astr</tspan></text>
+        <ellipse
+           style="fill:#ffffff;fill-opacity:1;stroke-width:1.29815"
+           id="path2-6"
+           cx="153.57341"
+           cy="49.642147"
+           rx="13.0548"
+           ry="12.703777" />
+        <ellipse
+           style="fill:#000000;fill-opacity:1;stroke-width:0.804488"
+           id="path2"
+           cx="153.57341"
+           cy="49.642147"
+           rx="8.0902987"
+           ry="7.8727636" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:43.5975px;font-family:'Ac437 Acer VGA 8x8';-inkscape-font-specification:'Ac437 Acer VGA 8x8';writing-mode:lr-tb;direction:ltr;fill:#ffffff;fill-opacity:1;stroke-width:1.02182"
+           x="10.66112"
+           y="97.358429"
+           id="text3"><tspan
+             sodipodi:role="line"
+             id="tspan3"
+             x="10.66112"
+             y="97.358429"
+             style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-size:43.5975px;font-family:'JetBrainsMono Nerd Font';-inkscape-font-specification:'JetBrainsMono Nerd Font Ultra-Bold';fill:#ffffff;fill-opacity:1;stroke-width:1.02182">Engine</tspan></text>
+      </g>
+      <path
+         sodipodi:type="star"
+         style="fill:#ffff00;fill-opacity:1"
+         id="path3"
+         inkscape:flatsided="false"
+         sodipodi:sides="4"
+         sodipodi:cx="73.128616"
+         sodipodi:cy="33.907387"
+         sodipodi:r1="30.61347"
+         sodipodi:r2="6.3047509"
+         sodipodi:arg1="0.23707404"
+         sodipodi:arg2="1.0147056"
+         inkscape:rounded="0.05"
+         inkscape:randomized="0"
+         d="M 102.88581,41.097252 C 102.58472,42.387215 77.58715,38.571694 76.456705,39.262171 75.322852,39.95473 67.232606,63.966576 65.938752,63.664577 64.648788,63.363486 68.464309,38.36592 67.773833,37.235476 67.081274,36.101622 43.069427,28.011376 43.371426,26.717522 43.672517,25.427558 68.670083,29.24308 69.800527,28.552603 70.934381,27.860044 79.024627,3.8481971 80.318481,4.1501961 81.608445,4.4512872 77.792923,29.448854 78.4834,30.579298 c 0.692559,1.133854 24.70441,9.224099 24.40241,10.517954 z"
+         inkscape:transform-center-x="1.1903319"
+         inkscape:transform-center-y="2.738324"
+         transform="rotate(42.972045,57.578019,158.21122)" />
+    </g>
+  </g>
+</svg>
