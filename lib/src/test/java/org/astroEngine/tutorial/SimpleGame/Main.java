@@ -4,6 +4,7 @@ import imgui.ImDrawList;
 import imgui.internal.ImGui;
 import org.astroEngine.AEWindow;
 import org.astroEngine.Camera.PerspectiveCamera;
+import org.astroEngine.Constants.vSyncState;
 import org.astroEngine.GUI.ImGUIObject;
 import org.astroEngine.Primitives.Objects.DrawableObject;
 import org.astroEngine.Viewports.BoxViewport;
@@ -16,6 +17,7 @@ import org.astroEngine.graphics.shaders.VertexShader;
 import org.astroEngine.graphics.geometry.Cube;
 import org.astroEngine.graphics.geometry.Sphere;
 import org.astroEngine.util.AEMath;
+import org.astroEngine.util.Astrodx;
 import org.astroEngine.util.Files;
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
@@ -47,6 +49,7 @@ public class Main extends AEWindow {
     public Main() {
         super(new Dimension(600, 600), "A Simple Game");
         setBackground(new Color(0, 0, 0, 0));
+        setVSync(vSyncState.ENABLE);
 
         camera = new PerspectiveCamera(((float) Math.toRadians(25)), 800 / 600f, 0.1f, 100f);
         camera.rotate(((float) Math.toRadians(15)), ((float) Math.toRadians(180)), 0);
@@ -145,11 +148,7 @@ public class Main extends AEWindow {
         super.loopSetup();
         glEnable(GL_DEPTH_TEST);
 
-        ((VertexShader) player.getComponent(ShapeComp.class).getShape()).compile();
-        ((TextureShader) floor.getShape().getShape()).compile();
-        ((TextureShader) floor2.getShape().getShape()).compile();
-        ((TextureShader) floor3.getShape().getShape()).compile();
-        ((TextureShader) floor4.getShape().getShape()).compile();
+        Astrodx.compileAllAvailableShaderObjects(this);
 
         viewport.apply(window, 600, 600);
 
@@ -172,6 +171,7 @@ public class Main extends AEWindow {
     public void loop(double fps) {
 
         super.loop(fps);
+        System.out.println(fps);
         setProjectionMatrix(camera.getCombinedProjection());
 
         float delta = ((float) (1 / fps));
@@ -179,7 +179,7 @@ public class Main extends AEWindow {
         currTime += delta;
 
         if (currTime > timer) {
-            System.out.println("Adding a cube");
+//            System.out.println("Adding a cube");
 
             DrawableObject cube = new DrawableObject(new Cube(AEMath.generateRandomFloat(.1f, 1), AEMath.generateRandomFloat(.1f, 1), AEMath.generateRandomFloat(.1f, 1)));
 
@@ -251,7 +251,7 @@ public class Main extends AEWindow {
 
                     if (pos.z < -5) {
                         removeObject(parent);
-                        score /= 2;
+                        score -= 2;
                     }
 
                     parent.getTransform().translateLocal(0, 0, -delta * AEMath.generateRandomFloat(0.1f, cubeSpeedCap));

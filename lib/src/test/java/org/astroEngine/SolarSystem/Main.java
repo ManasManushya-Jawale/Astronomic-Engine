@@ -53,8 +53,10 @@ public class Main extends AEWindow {
         moon = new DrawableObject(new ImageSprite(Files.internal("/Moon.png")));
 
         sun.getTransform().translate(400, 400, 0);
+        earth.getTransform().translate(0, 300, 0);
+        moon.getTransform().translate(0, 2000, 0);
 
-        moon.getTransform().scale(1/25f*1/1.125f);
+        moon.getTransform().scale(1/1.125f);
 
         earth.getTransform().scale(1/25f);
 
@@ -82,8 +84,12 @@ public class Main extends AEWindow {
         }));
 
         addObject(sun);
-        addObject(earth);
-        addObject(moon);
+
+        moon.setParent(this);
+        earth.getChildren().add(moon);
+
+        earth.setParent(this);
+        sun.getChildren().add(earth);
 
         canvas = new ImGUIObject(() -> {
             ImGui.begin("Enter Simulation data");
@@ -142,25 +148,12 @@ public class Main extends AEWindow {
 
         float delta = ((float) (1/fps));
 
-        if (objects.contains(moon)) {
-            earthPos = new Vector3d(Math.cos(t1) * r1, Math.sin(t1) * r1, 0);
-            earthPos.add(400, 400, 0);
-            earth.getTransform().setTranslation(earthPos.x, earthPos.y, earthPos.z);
+        sun.getTransform().rotateZ(Math.toRadians(delta * s1));
+        earth.getTransform().rotateZ(Math.toRadians(delta * s2));
 
-            earth.getTransform().rotateZ(Math.toRadians(delta * rs1));
-            moon.getTransform().rotateZ(Math.toRadians(delta * rs2));
-            sun.getTransform().rotateZ(Math.toRadians(delta * rs3));
-
-            moonPos = new Vector3d(Math.cos(t2) * r2, Math.sin(t2) * r2, 0);
-            moonPos.add(earthPos);
-            moon.getTransform().setTranslation(moonPos);
-
-            earthPoints.add(earthPos);
-            moonPoints.add(moonPos);
-
-            t1 += Math.toRadians((delta) * s1);
-            t2 += Math.toRadians((delta) * s2);
-        }
+        sun.getTransform().rotateZ(Math.toRadians(delta * rs3));
+        earth.getTransform().rotateZ(Math.toRadians(delta * rs1));
+        moon.getTransform().rotateZ(Math.toRadians(delta * rs2));
     }
 
     public static void main(String[] args) {

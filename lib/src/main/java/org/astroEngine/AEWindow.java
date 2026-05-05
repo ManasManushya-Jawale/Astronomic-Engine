@@ -2,6 +2,7 @@ package org.astroEngine;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ComponentListener;
 import java.util.*;
 
 import org.astroEngine.Constants.vSyncState;
@@ -58,7 +59,6 @@ public class AEWindow {
         GLFW.glfwSwapInterval(vSync.getValue());
     }
 
-
     public AEWindow(Dimension size, String title) {
         this.size = size;
         this.title = title;
@@ -97,29 +97,22 @@ public class AEWindow {
                 background.getBlue() / 255f,
                 background.getAlpha() / 255f);
 
-        for (GameObject object : objects) {
-            Transform transform;
-            if ((transform = object.getComponent(Transform.class)) != null) {
-                for (Component component : object.getComponents()) {
-                    if (component instanceof ShapeComp shape) {
-                        Matrix4d mvp = new Matrix4d(projectionMatrix)
-                                .mul(transform.getTransform());
-                        shape.getShape().draw(mvp);
-                    }
-                }
+        iterateComponents((comp, transform) -> {
+            if (comp instanceof ShapeComp shape) {
+                Matrix4d mvp = new Matrix4d(projectionMatrix)
+                        .mul(transform);
+
+                shape.getShape().draw(mvp);
             }
-        }
+        });
+    }
+
+
+    public void loop(double fps) {
+        iterateComponents((comp, _) -> comp.update((float) (1 / fps)));
 
         GLFW.glfwSwapBuffers(window);
         GLFW.glfwPollEvents();
-    }
-
-    public void loop(double fps) {
-        for (GameObject objects : objects) {
-            for (Component components : objects.getComponents()) {
-                components.update((float) (1 / fps));
-            }
-        }
     }
 
     public void initialStart() {
@@ -186,22 +179,14 @@ public class AEWindow {
         GLFW.glfwHideWindow(window);
         visible = false;
 
-        for (GameObject objects : objects) {
-            for (Component components : objects.getComponents()) {
-                components.windowHide();
-            }
-        }
+        iterateComponents((comp, _) -> comp.windowHide());
     }
 
     public void showWindow() {
         GLFW.glfwShowWindow(window);
         visible = true;
 
-        for (GameObject objects : objects) {
-            for (Component components : objects.getComponents()) {
-                components.windowShow();
-            }
-        }
+        iterateComponents((comp, _) -> comp.windowShow());
     }
 
     /**
@@ -256,13 +241,39 @@ public class AEWindow {
     }
 
     public void dispose() {
-        for (GameObject objects : objects) {
-            for (Component components : objects.getComponents()) {
-                components.dispose();
-            }
+        iterateComponents((comp, _) -> comp.dispose());
+    }
+
+    public interface ComponentListener {
+        public void action(Component component, Matrix4d worldTransform);
+    }
+
+    public void iterateComponents(ComponentListener action) {
+        for (GameObject obj : objects) {
+            iterateObject(obj, new Matrix4d(), action);
         }
     }
 
+    private void iterateObject(GameObject obj, Matrix4d parentTransform, ComponentListener action) {
+        Transform transform = obj.getComponent(Transform.class);
+
+        // Compute this object's world transform
+        Matrix4d worldTransform = new Matrix4d(parentTransform);
+
+        if (transform != null) {
+            worldTransform.mul(transform.getTransform());
+        }
+
+        // Apply action to components
+        for (Component comp : obj.getComponents()) {
+            action.action(comp, worldTransform);
+        }
+
+        // Recurse into children
+        for (GameObject child : obj.getChildren()) {
+            iterateObject(child, worldTransform, action);
+        }
+    }
     public void setPos(int x, int y) {
         GLFW.glfwSetWindowPos(window, x, y);
     }

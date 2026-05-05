@@ -12,11 +12,21 @@ import org.joml.Matrix4d;
 public class GameObject {
     ArrayList<Component> components;
     public Transform transform;
+    private ArrayList<GameObject> children;
     private AEWindow parent;
     private int layer = 1;
 
+    public ArrayList<GameObject> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<GameObject> children) {
+        this.children = children;
+    }
+
     public GameObject() {
         this.components = new ArrayList<>();
+        children = new ArrayList<>();
         addTransform();
     }
     @Override
